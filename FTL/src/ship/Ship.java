@@ -307,7 +307,6 @@ public abstract class Ship {
 	}
 
 	/**
-	 * TODO
 	 * Applies the damage a projectile did.
 	 * @param p the projectile to process
 	 */
@@ -315,9 +314,8 @@ public abstract class Ship {
 		Tile touche = this.getTileHit(p);
 		if(touche != null) {//si on n'est pas different de null on ne fait rien
 			this.currentHull -= p.getDamage();
-			p.applyEffect(touche);
-			if(touche instanceof Module) {
-				
+			if(touche instanceof Module) {//si on touche un module on applique l'effet
+				p.applyEffect((Module)touche);
 			}
 		}
 	}

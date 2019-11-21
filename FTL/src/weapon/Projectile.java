@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import display.StdDraw;
 import display.Vector2;
+import module.Module;
 import ship.Tile;
 
 /**
@@ -101,10 +102,10 @@ public abstract class Projectile {
 	}
 	
 	/**
-	 * apply to the tile the effect of the projectile
-	 * @param tile the tile to apply
+	 * apply to the Module the effect of the projectile
+	 * @param tile the Module to apply
 	 */
-	public void applyEffect(Tile tile) {
+	public void applyEffect(Module tile) {
 		return;
 	}
 }
