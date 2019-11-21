@@ -312,7 +312,14 @@ public abstract class Ship {
 	 * @param p the projectile to process
 	 */
 	public void applyDamage(Projectile p) {
-		System.out.println("test");
+		Tile touche = this.getTileHit(p);
+		if(touche != null) {//si on n'est pas different de null on ne fait rien
+			this.currentHull -= p.getDamage();
+			p.applyEffect(touche);
+			if(touche instanceof Module) {
+				
+			}
+		}
 	}
 	
 	// Aiming Methods
@@ -392,18 +399,20 @@ public abstract class Ship {
 	/////////////////////////////////////////////////////////////////////////////
 	//perso
 	////////////////////////////////////////////////////////////////////////////
-	/**
-	 * Gives the positions of the ships' layout
-	 * @return the positions of the ships' layout
-	 */
-	public Collection<Vector2<Double>> getPosLayout(){
-		Collection<Vector2<Double>> list = new ArrayList<Vector2<Double>>();
-		for(Tile t : this.layout) {
-			list.add(t.getCenterPosition());
-		}
-		return list;
-	}
 	
+	/**
+	 * return the tile hit by the projectile if it existe
+	 * @param proj the projectile
+	 * @return the tile hit by the projectile if it existe, null instead
+	 */
+	public Tile getTileHit (Projectile proj) {
+		for(Tile tile : this.layout) {
+			if(!proj.isOutOfRectangle(tile.getCenterPosition().getX(), tile.getCenterPosition().getY(), Tile.WIDTH/2, Tile.HEIGHT/2)) {
+				return tile;
+			}
+		}
+		return null;
+	}
 	
 	
 	

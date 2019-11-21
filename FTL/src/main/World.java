@@ -2,11 +2,9 @@ package main;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import display.StdDraw;
 import display.Vector2;
 import ship.DummyShip;
 import ship.Ship;
-import ship.Tile;
 import weapon.Projectile;
 
 /**
@@ -62,20 +60,15 @@ public class World {
 		Collection<Projectile> toRemove = new ArrayList<Projectile>();
 		for(Projectile proj : projectiles) {
 			//on test pour chaque projectiles les tile du vaisseau
-			Collection<Vector2<Double>> list = null;
 			if(isPlayer) {
-				list = this.opponent.getPosLayout();
+				if(this.opponent.getTileHit(proj) != null) {
+					 this.opponent.applyDamage(proj);
+					 toRemove.add(proj);
+				}
 			}else {
-				list = this.player.getPosLayout();
-			}
-			for(Vector2<Double> pos : list) {
-				if(!proj.isOutOfRectangle(pos.getX(), pos.getY(), Tile.WIDTH/2, Tile.HEIGHT/2)) {//si on touche un module
-					if(isPlayer) {
-						this.opponent.applyDamage(proj);
-					}else {
-						this.player.applyDamage(proj);
-					}
-					toRemove.add(proj);
+				if(this.player.getTileHit(proj) != null) {
+					 this.player.applyDamage(proj);
+					 toRemove.add(proj);
 				}
 			}
 		}

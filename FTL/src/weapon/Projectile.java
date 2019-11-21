@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import display.StdDraw;
 import display.Vector2;
+import ship.Tile;
 
 /**
  * A projectile is shot by a weapon at a position and 
@@ -99,4 +100,11 @@ public abstract class Projectile {
 		return damage;
 	}
 	
+	/**
+	 * apply to the tile the effect of the projectile
+	 * @param tile the tile to apply
+	 */
+	public void applyEffect(Tile tile) {
+		return;
+	}
 }
