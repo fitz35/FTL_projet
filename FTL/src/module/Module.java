@@ -8,12 +8,14 @@ import ship.Tile;
  * This tile has a HUD to display its current energy level.
  */
 public abstract class Module extends Tile {
+	private static final double     TEMPS_REPARE = 2.0; //temps de la réparation en seconde 
 
 	protected	String				name;				// Name of the module
 	protected	int 				maxLevel;			// Maximum level of the module
 	protected 	int 				currentLevel;		// Current level of the module
 	protected 	int 				allocatedEnergy;	// Amount of energy allocated to the module
 	protected 	int					amountDamage;		// Amount of damage done to the module
+	protected   double				timeElapsed;        // time elapsed during the last repare
 	protected  	boolean 			canBeManned; 		// Can a crew member man this module
 	protected 	Vector2<Double> 	hudPos;				// HUD position of the module
 	
@@ -52,6 +54,26 @@ public abstract class Module extends Tile {
 			return true;
 		}
 		return false;
+	}
+	
+	//crew methode and repare
+	/**
+	 * step the module to be repared and repare it if needed
+	 * @param elapsedTime the time elapsed
+	 */
+	public void repare (double elapsedTime) {
+		//on avance le temps
+		if(this.amountDamage > 0) {
+			this.timeElapsed += elapsedTime;
+		}else {
+			this.timeElapsed = 0;
+		}
+		
+		//on repare si jamais
+		if(this.timeElapsed >= Module.TEMPS_REPARE) {
+			this.amountDamage --;
+			this.timeElapsed = 0;
+		}
 	}
 	
 	// Draw Methods

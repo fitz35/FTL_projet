@@ -64,6 +64,7 @@ public abstract class Ship {
 	public void step(double elapsedTime) {
 		chargeWeapons(elapsedTime);
 		processProjectiles(elapsedTime);
+		this.repareModule(elapsedTime);
 	}
 	
 	// Drawing Methods
@@ -420,7 +421,7 @@ public abstract class Ship {
 		}
 		return null;
 	}
-	//autre
+	//crew management
 	public void chooseTeleporteTileLeft() {
 		if(this.isCrewMemberSelected()) {
 			if (crewTile == null) {
@@ -460,6 +461,9 @@ public abstract class Ship {
 		}
 	}
 	
+	/**
+	 * teleport the selected crew member on the selected tile if they existe
+	 */
 	public void teleportCrewMember() {
 		//on ne peux avoir qu'un membre par tile
 		if(this.isCrewMemberSelected() && this.crewTile != null && !this.crewTile.hasCrewMember()) {
@@ -470,6 +474,21 @@ public abstract class Ship {
 				}
 			}
 			this.crewTile.setCrewMember(this.selectedMember);
+		}
+	}
+	
+	/**
+	 * step the modules to be repared
+	 * @param time the elapsed time
+	 */
+	public void repareModule(double time) {
+		for(CrewMember member : this.crew) {
+			for(Tile tile : this.layout) {//on trouve la case sur lequel est le membre et teste si c'est un module
+				if(tile.isCrewMember(member) && tile instanceof Module) {
+					((Module) tile).repare(time);
+					break;
+				}
+			}
 		}
 	}
 	
