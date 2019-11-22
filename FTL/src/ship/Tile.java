@@ -55,7 +55,7 @@ public class Tile {
 		double x = tilePos.getX();
 		double y = tilePos.getY();
 		if (isAimed) {
-			StdDraw.setPenColor(StdDraw.RED);
+			StdDraw.setPenColor(this.isPlayer ? StdDraw.GREEN : StdDraw.RED);
 			StdDraw.filledRectangle(x-0.01, y-0.01, 0.01, 0.01);
 			StdDraw.setPenColor(StdDraw.BLACK);
 		}

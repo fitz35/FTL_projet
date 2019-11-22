@@ -115,6 +115,13 @@ public class Bindings {
 		else if(key.getKeyCode() == KeyEvent.VK_F)
 			w.player.selectMember(3);
 		
+		else if(key.getKeyCode() == KeyEvent.VK_W)
+			w.player.chooseTeleporteTileLeft();
+		else if(key.getKeyCode() == KeyEvent.VK_X)
+			w.player.chooseTeleporteTileRight();
+		else if(key.getKeyCode() == KeyEvent.VK_C)
+			w.player.teleportCrewMember();
+		
 		// Aiming System
 		else if(key.getKeyCode() == KeyEvent.VK_UP)
 			processArrowKey(KeyEvent.VK_UP);

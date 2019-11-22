@@ -30,6 +30,7 @@ public abstract class Ship {
 	protected Module[]					modules;		// The modules on the ship
 	protected Collection<Projectile>	projectiles;	// The projectiles shot by the ship
 	protected Tile						target;			// The targeted tile of the enemy ship
+	protected Tile 						crewTile;       // The tile to teleport the crew member
 	protected CrewMember				selectedMember; // The currently selected crew member
 	
 	/**
@@ -140,10 +141,13 @@ public abstract class Ship {
 	 * Unselects the selected crew member.
 	 */
 	public void unselectCrewMember() {
-		if (!isCrewMemberSelected())
+		if (!isCrewMemberSelected()) {
 			return;
+		}
 		selectedMember.unselect();
 		selectedMember = null;
+		//on deselectionne la case
+		this.crewTile.unmarkTarget();
 	}
 
 	/**
@@ -152,13 +156,18 @@ public abstract class Ship {
 	 */
 	public void selectMember(int i) {
 		int j = 0;
-		for (CrewMember m : crew)
+		//on selectionne (ou reselectionne) la case
+		if(this.crewTile == null)
+			this.crewTile = this.getFirstTile();
+		this.crewTile.markTarget();
+		
+		for (CrewMember m : crew) {
 			if (j++ == i) {
 				selectedMember = m;
 				selectedMember.select();
 				return;
 			}
-				
+		}
 	}
 	
 	/**
@@ -397,7 +406,7 @@ public abstract class Ship {
 	/////////////////////////////////////////////////////////////////////////////
 	//perso
 	////////////////////////////////////////////////////////////////////////////
-	
+	//getter spécials
 	/**
 	 * return the tile hit by the projectile if it existe
 	 * @param proj the projectile
@@ -411,8 +420,57 @@ public abstract class Ship {
 		}
 		return null;
 	}
+	//autre
+	public void chooseTeleporteTileLeft() {
+		if(this.isCrewMemberSelected()) {
+			if (crewTile == null) {
+				crewTile = this.getFirstTile();
+				crewTile.markTarget();
+				return;
+			}else{
+				this.crewTile.unmarkTarget();
+				int n = ((ArrayList<Tile>) this.layout).indexOf(this.crewTile);
+				if(n < this.layout.size() - 1) {
+					this.crewTile = ((ArrayList<Tile>) this.layout).get(n + 1);
+				}else {
+					this.crewTile = this.getFirstTile();
+				}
+				this.crewTile.markTarget();
+				return;
+			}
+		}
+	}
+	public void chooseTeleporteTileRight() {
+		if(this.isCrewMemberSelected()) {
+			if (crewTile == null) {
+				crewTile = this.getFirstTile();
+				crewTile.markTarget();
+				return;
+			}else{
+				this.crewTile.unmarkTarget();
+				int n = ((ArrayList<Tile>) this.layout).indexOf(this.crewTile);
+				if(n > 0) {
+					this.crewTile = ((ArrayList<Tile>) this.layout).get(n - 1);
+				}else {
+					this.crewTile = ((ArrayList<Tile>) this.layout).get(this.layout.size() - 1);
+				}
+				this.crewTile.markTarget();
+				return;
+			}
+		}
+	}
 	
-	
-	
+	public void teleportCrewMember() {
+		//on ne peux avoir qu'un membre par tile
+		if(this.isCrewMemberSelected() && this.crewTile != null && !this.crewTile.hasCrewMember()) {
+			for(Tile tile : this.layout) {
+				if(tile.isCrewMember(this.selectedMember)) {
+					tile.removeCrewMember();
+					break;
+				}
+			}
+			this.crewTile.setCrewMember(this.selectedMember);
+		}
+	}
 	
 }
