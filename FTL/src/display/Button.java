@@ -19,12 +19,13 @@ public abstract class Button {
 				()
 				->
 				{
+					double t = 0;
 					while (running) {
 						if (StdDraw.isMousePressed())
 							if (
 								StdDraw.mouseX() < pos.getX()+dim.getX() && StdDraw.mouseX() > pos.getX()-dim.getX() &&
 								StdDraw.mouseY() < pos.getY()+dim.getY()&& StdDraw.mouseY() > pos.getY()-dim.getY() &&
-								t < System.currentTimeMillis()-300)
+								t + 300< System.currentTimeMillis())
 							{
 								t = System.currentTimeMillis();
 								try {
@@ -37,7 +38,6 @@ public abstract class Button {
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
-								
 							}
 					}
 				}

@@ -30,5 +30,13 @@ public class Reactor extends Module {
 		amountDamage = -1;
 		canBeManned = false;
 	}
-	
+	/**
+	 * @Override
+	 */
+	public void addLevel() {
+		if(this.currentLevel < this.maxLevel) {
+			this.currentLevel++;
+			this.allocatedEnergy++;//onb ajoute cette ligne pour augmenter l"energie total de 1
+		}
+	}
 }

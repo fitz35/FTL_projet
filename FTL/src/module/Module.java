@@ -131,12 +131,11 @@ public abstract class Module extends Tile {
 	// setter //
 	////////////
 	/**
-	 * set the level of the module if it possible
-	 * @param level the level to set
+	 * add 1 to the level of the module if it possible
 	 */
-	public void setLevel(int level) {
-		if(level <= this.maxLevel)
-			this.currentLevel = level;
+	public void addLevel() {
+		if(this.currentLevel < this.maxLevel)
+			this.currentLevel = this.currentLevel + 1;
 	}
 	
 }

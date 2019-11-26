@@ -6,6 +6,7 @@ import display.Button;
 import display.StdDraw;
 import display.Vector2;
 import module.Module;
+import ship.CrewMember;
 import ship.DummyShip;
 import ship.Ship;
 import weapon.Projectile;
@@ -20,6 +21,8 @@ public class World {
 	
 	private int 		level;  // The curent level of the opponent ship (= the difficulty)
 	private Collection<ModuleButton> moduleButton ; // The button to display at the end of the round (upgrade module)
+	private int amelioration;   // The number of the amélioration to give to the player
+	private Module moduleToUpgrade; //the module to upgrade
 	
 	Ship player;				// The ship of the player
 	Ship opponent;				// The ship of the opponent
@@ -35,6 +38,8 @@ public class World {
 		genNewOpponentShip();
 		time = System.currentTimeMillis();
 		this.moduleButton = new ArrayList<ModuleButton>();
+		this.amelioration = -1;
+		this.moduleToUpgrade = null;
 	}
 	
 	/**
@@ -49,20 +54,30 @@ public class World {
 	 */
 	public void step() {
 		//on clean les bouttons
-			for(ModuleButton button : this.moduleButton) {
-				button.destroy();
-			}
-			this.moduleButton.clear();
+		for(ModuleButton button : this.moduleButton) {
+			button.destroy();
+		}
+		this.moduleButton.clear();
+		//on gere les upgrades du player et la regeneration du ship adverse
+		if(this.amelioration != -1) {
+			this.upgrade(this.player, true);
+			this.amelioration = -1;
+		}
+		if(this.moduleToUpgrade != null) {
+			this.moduleToUpgrade.addLevel();
+			genNewOpponentShip();
+			this.moduleToUpgrade = null;
+		}
+		//on avance le monde	
+		player.step(((double) (System.currentTimeMillis()-time))/1000);
+		opponent.step(((double) (System.currentTimeMillis()-time))/1000);
 			
-			player.step(((double) (System.currentTimeMillis()-time))/1000);
-			opponent.step(((double) (System.currentTimeMillis()-time))/1000);
+		opponent.ai(player);
 			
-			opponent.ai(player);
+		processHit(player.getProjectiles(), true);
+		processHit(opponent.getProjectiles(), false);
 			
-			processHit(player.getProjectiles(), true);
-			processHit(opponent.getProjectiles(), false);
-			
-			time = System.currentTimeMillis();
+		time = System.currentTimeMillis();
 	}
 	
 	/**
@@ -111,11 +126,11 @@ public class World {
 	}
 	
 	/**
-	 * if the opponent is dead
-	 * @return if the opponent is dead
+	 * if the opponent is dead and the player haven't choose his reward
+	 * @return if the opponent is dead and the player haven't choose his reward
 	 */
-	public boolean isOpponentDead() {
-		return this.opponent.getCurentHull() <= 0;
+	public boolean isPlayerWin() {
+		return this.opponent.getCurentHull() <= 0 && this.moduleToUpgrade == null;
 	}
 	
 	/**
@@ -123,15 +138,37 @@ public class World {
 	 */
 	private void genNewOpponentShip() {
 		this.opponent = new DummyShip(false, new Vector2<Double>(0.8, 0.5));
+		
+		for(int i = 0 ; i < this.level ; i++) {
+			this.upgrade(this.opponent, false);
+		}
+		
 		this.level ++;
 	}
 	
 	/**
-	 * player's victory and resolution of the reward
+	 * add a reward to the the player ship according with this.amelioration if the ship is a player
+	 * @param Ship ship the ship to upgrade
+	 * @param boolean isPlayer if the ship is a player
 	 */
-	public void playerGagne() {
-		//on genere un nouveau vaisseau
-		this.genNewOpponentShip();
+	private void upgrade(Ship ship, boolean isPlayer) {
+		int tmp = isPlayer ? this.amelioration : (int) Math.round(Math.random() * 3);
+		switch(tmp) {
+			case 0:
+				//"Une arme !";
+				break;
+			case 1:
+				//"Une réparation entre 1 et 5 de l’intégrité de la coque !";
+				ship.repareHull();
+				break;
+			case 2:
+				//"Un membre d’équipage !";
+				ship.addCrewMember(new CrewMember("bill" + this.level));
+				break;
+			case 3:
+				//"Un missile supplémentaire !";
+				break;
+		}
 	}
 	
 	//drawing the end game hud
@@ -142,11 +179,32 @@ public class World {
 		StdDraw.setPenColor(StdDraw.WHITE);//on efface lécran
 		StdDraw.filledRectangle(0.5, 0.5, 0.23, 0.23);
 		StdDraw.setPenColor(StdDraw.BLACK);
-		StdDraw.text(0.5, 0.70, "Gagné !");
-		StdDraw.text(0.5, 0.70, "Gagné !");
 		StdDraw.rectangle(0.5, 0.5, 0.25, 0.25);
+		StdDraw.text(0.5, 0.70, "Gagné !");
 		
-		//module
+		//amélioration
+		if(this.amelioration == -1) {
+			this.amelioration = (int) Math.round( (0 + Math.random() * 3));
+		}
+		String amelio_string = "Upgrade aleatoire : ";
+		switch(this.amelioration) {
+			case 0:
+				amelio_string += "Une arme !";
+				break;
+			case 1:
+				amelio_string += "Une réparation entre 1 et 5 de l’intégrité de la coque !";
+				break;
+			case 2:
+				amelio_string += "Un membre d’équipage !";
+				break;
+			case 3:
+				amelio_string += "Un missile supplémentaire !";
+				break;
+		}
+		
+		StdDraw.textLeft(0.25, 0.65, amelio_string);
+		
+		//module choice
 		Module[] modules = this.player.getModule();
 		
 		for(int i = 0 ; i < modules.length ; i++ ) {
@@ -164,8 +222,7 @@ public class World {
 			}else {//sinon on ajoute un boutton
 				ModuleButton button = new ModuleButton(new Vector2<Double>(posX, posY),
 						new Vector2<Double>(halfwidth, halfhigh), 
-						modules[i],
-						modules[i].getCurrentLevel() + 1) ;
+						modules[i]);
 				this.moduleButton.add(button);
 				button.draw();
 			}
@@ -196,19 +253,16 @@ public class World {
 	private class ModuleButton extends Button {
 		
 		private Module module;
-		private int niveau;
 		
-		public ModuleButton(Vector2<Double> pos, Vector2<Double> dim, Module module, int niveau) {
+		public ModuleButton(Vector2<Double> pos, Vector2<Double> dim, Module module) {
 			super(pos, dim, true);
 			this.module = module;
-			this.niveau = niveau;
 		}
 
 		@Override
 		protected void onLeftClick() {
 			if(this.module.getCurrentLevel() != this.module.getMaxLevel()) {
-				this.module.setLevel(niveau);;
-				playerGagne();
+				moduleToUpgrade = this.module;
 			}
 		}
 

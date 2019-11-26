@@ -33,6 +33,8 @@ public abstract class Ship {
 	protected Tile 						crewTile;       // The tile to teleport the crew member
 	protected CrewMember				selectedMember; // The currently selected crew member
 	
+	protected IA ia; // the ia of the opponent ship
+	
 	/**
 	 * Creates a Ship for the player or the opponent at the provided position.
 	 * @param isPlayer whether the ship is for the player
@@ -44,6 +46,7 @@ public abstract class Ship {
 		crew = new ArrayList<CrewMember>();
 		projectiles = new ArrayList<Projectile>();
 		layout = new ArrayList<Tile>();
+		this.ia = null;
 	}
 	
 	// Main Methods
@@ -55,6 +58,11 @@ public abstract class Ship {
 	public void ai(Ship player) {
 		if (isPlayer)
 			return;
+		else {
+			if(this.ia == null)
+				this.ia = new IA(this, player); 
+			this.ia.step();
+		}
 	}
 	
 	/**
@@ -185,6 +193,75 @@ public abstract class Ship {
 		t.setCrewMember(member);
 	}
 	
+	public void chooseTeleporteTileLeft() {
+		if(this.isCrewMemberSelected()) {
+			if (crewTile == null) {
+				crewTile = this.getFirstTile();
+				crewTile.markTarget();
+				return;
+			}else{
+				this.crewTile.unmarkTarget();
+				int n = ((ArrayList<Tile>) this.layout).indexOf(this.crewTile);
+				if(n < this.layout.size() - 1) {
+					this.crewTile = ((ArrayList<Tile>) this.layout).get(n + 1);
+				}else {
+					this.crewTile = this.getFirstTile();
+				}
+				this.crewTile.markTarget();
+				return;
+			}
+		}
+	}
+	public void chooseTeleporteTileRight() {
+		if(this.isCrewMemberSelected()) {
+			if (crewTile == null) {
+				crewTile = this.getFirstTile();
+				crewTile.markTarget();
+				return;
+			}else{
+				this.crewTile.unmarkTarget();
+				int n = ((ArrayList<Tile>) this.layout).indexOf(this.crewTile);
+				if(n > 0) {
+					this.crewTile = ((ArrayList<Tile>) this.layout).get(n - 1);
+				}else {
+					this.crewTile = ((ArrayList<Tile>) this.layout).get(this.layout.size() - 1);
+				}
+				this.crewTile.markTarget();
+				return;
+			}
+		}
+	}
+	
+	/**
+	 * teleport the selected crew member on the selected tile if they existe and swap if the tile is occuped
+	 */
+	public void teleportCrewMember() {
+		//on ne peux avoir qu'un membre par tile, si deja occuper swap
+		if(this.isCrewMemberSelected() && this.crewTile != null) {
+			for(Tile tile : this.layout) {
+				if(tile.isCrewMember(this.selectedMember)) {
+					tile.setCrewMember(this.crewTile.getMember());
+					break;
+				}
+			}
+			this.crewTile.setCrewMember(this.selectedMember);
+		}
+	}
+	
+	/**
+	 * step the modules to be repared
+	 * @param time the elapsed time
+	 */
+	public void repareModule(double time) {
+		for(CrewMember member : this.crew) {
+			for(Tile tile : this.layout) {//on trouve la case sur lequel est le membre et teste si c'est un module
+				if(tile.isCrewMember(member) && tile instanceof Module) {
+					((Module) tile).repare(time);
+					break;
+				}
+			}
+		}
+	}
 	// Layout Methods
 	
 	/**
@@ -213,10 +290,23 @@ public abstract class Ship {
 	 * Gives the first tile of the ship.
 	 * @return the first tile of the ship
 	 */
-	private Tile getFirstTile() {
+	public Tile getFirstTile() {
 		return layout.iterator().next();
 	}
 	
+	/**
+	 * return the tile hit by the projectile if it existe
+	 * @param proj the projectile
+	 * @return the tile hit by the projectile if it existe, null instead
+	 */
+	public Tile getTileHit (Projectile proj) {
+		for(Tile tile : this.layout) {
+			if(!proj.isOutOfRectangle(tile.getCenterPosition().getX(), tile.getCenterPosition().getY(), Tile.WIDTH/2, Tile.HEIGHT/2)) {
+				return tile;
+			}
+		}
+		return null;
+	}
 	// Energy Methods
 
 	/**
@@ -233,13 +323,15 @@ public abstract class Ship {
 	/**
 	 * Increases the energy allocated in the module.
 	 * @param module the module to add energy to
+	 * @return if the energie was transfered into the module
 	 */
-	public void addEnergy(int module) {
-		if (module >= modules.length)
-			return;
-		if (reactor.getAllocatedEnergy() > 0 && modules[module].addEnergy()) 
+	public boolean addEnergy(int module) {
+		if (module < modules.length && reactor.getAllocatedEnergy() > 0 && modules[module].addEnergy()) {
 			reactor.removeEnergy();
-		
+			return true;
+		}else {
+			return false;
+		}
 	}
 	
 	// Weapon Methods
@@ -250,7 +342,6 @@ public abstract class Ship {
 	 */
 	public void deactiveWeapon(int weapon) {
 		weaponControl.deactiveWeapon(weapon);
-		this.getFirstTile().setWeapon(null);
 	}
 	
 	/**
@@ -259,7 +350,6 @@ public abstract class Ship {
 	 */
 	public void activeWeapon(int weapon) {
 		weaponControl.activeWeapon(weapon);
-		this.getFirstTile().setWeapon(weaponControl.getWeapon(weapon));
 	}
 	
 	/**
@@ -293,7 +383,7 @@ public abstract class Ship {
 	 */
 	private Tile getWeaponTile(Weapon w) {
 		for (Tile t : layout)
-			if (t.getWeapon() == w)
+			if (t.getWeapon() != null)
 				return t;
 		return null;
 	}
@@ -408,93 +498,9 @@ public abstract class Ship {
 		System.err.println("Aiming System Critical Failure !");
 	}
 	
-	/////////////////////////////////////////////////////////////////////////////
-	//perso
-	////////////////////////////////////////////////////////////////////////////
-	//getter spécials
-	/**
-	 * return the tile hit by the projectile if it existe
-	 * @param proj the projectile
-	 * @return the tile hit by the projectile if it existe, null instead
-	 */
-	public Tile getTileHit (Projectile proj) {
-		for(Tile tile : this.layout) {
-			if(!proj.isOutOfRectangle(tile.getCenterPosition().getX(), tile.getCenterPosition().getY(), Tile.WIDTH/2, Tile.HEIGHT/2)) {
-				return tile;
-			}
-		}
-		return null;
-	}
-	//crew management
-	public void chooseTeleporteTileLeft() {
-		if(this.isCrewMemberSelected()) {
-			if (crewTile == null) {
-				crewTile = this.getFirstTile();
-				crewTile.markTarget();
-				return;
-			}else{
-				this.crewTile.unmarkTarget();
-				int n = ((ArrayList<Tile>) this.layout).indexOf(this.crewTile);
-				if(n < this.layout.size() - 1) {
-					this.crewTile = ((ArrayList<Tile>) this.layout).get(n + 1);
-				}else {
-					this.crewTile = this.getFirstTile();
-				}
-				this.crewTile.markTarget();
-				return;
-			}
-		}
-	}
-	public void chooseTeleporteTileRight() {
-		if(this.isCrewMemberSelected()) {
-			if (crewTile == null) {
-				crewTile = this.getFirstTile();
-				crewTile.markTarget();
-				return;
-			}else{
-				this.crewTile.unmarkTarget();
-				int n = ((ArrayList<Tile>) this.layout).indexOf(this.crewTile);
-				if(n > 0) {
-					this.crewTile = ((ArrayList<Tile>) this.layout).get(n - 1);
-				}else {
-					this.crewTile = ((ArrayList<Tile>) this.layout).get(this.layout.size() - 1);
-				}
-				this.crewTile.markTarget();
-				return;
-			}
-		}
-	}
-	
-	/**
-	 * teleport the selected crew member on the selected tile if they existe and swap if the tile is occuped
-	 */
-	public void teleportCrewMember() {
-		//on ne peux avoir qu'un membre par tile, si deja occuper swap
-		if(this.isCrewMemberSelected() && this.crewTile != null) {
-			for(Tile tile : this.layout) {
-				if(tile.isCrewMember(this.selectedMember)) {
-					tile.setCrewMember(this.crewTile.getMember());
-					break;
-				}
-			}
-			this.crewTile.setCrewMember(this.selectedMember);
-		}
-	}
-	
-	/**
-	 * step the modules to be repared
-	 * @param time the elapsed time
-	 */
-	public void repareModule(double time) {
-		for(CrewMember member : this.crew) {
-			for(Tile tile : this.layout) {//on trouve la case sur lequel est le membre et teste si c'est un module
-				if(tile.isCrewMember(member) && tile instanceof Module) {
-					((Module) tile).repare(time);
-					break;
-				}
-			}
-		}
-	}
+	///////////////
+	//getter and setter//
+	/////////////////////
 	
 	/**
 	 * get the curent hull of the ship
@@ -502,6 +508,13 @@ public abstract class Ship {
 	 */
 	public int getCurentHull () {
 		return this.currentHull;
+	}
+	
+	/**
+	 * repare the hull with an aleatoir value beetween 1 and 5
+	 */
+	public void repareHull () {
+		this.currentHull = (int) Math.min((this.currentHull + 1 + Math.round(Math.random() * 4)), this.totalHull);
 	}
 	
 	/**

@@ -30,7 +30,7 @@ public class Start {
 				w.processKey();
 				
 				// Makes a step of the world if the ship of adversire is alive
-				if(!w.isOpponentDead()) {
+				if(!w.isPlayerWin()) {
 					w.step();
 					// Draws the world to the canvas
 					w.draw();
