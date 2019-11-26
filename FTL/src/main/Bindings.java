@@ -1,7 +1,10 @@
 package main;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import display.StdDraw;
+import weapon.DummyGun;
 
 /**
  * The bindings class processes the key pressed by the player.
@@ -9,13 +12,18 @@ import display.StdDraw;
 public class Bindings {
 
 	private World w;		// The world on which the actions act
-	
+	private Collection<CodeCheat> cheatCode; //the cheatCode
+	 
 	/**
 	 * Create the bindings
 	 * @param w the world
 	 */
 	public Bindings(World w) {
 		this.w=w;
+		
+		this.cheatCode = new ArrayList<CodeCheat> ();
+		int[] sequence = {KeyEvent.VK_V, KeyEvent.VK_B, KeyEvent.VK_N};
+		this.cheatCode.add(new CodeGetWeapon(sequence));
 	}
 	
 	/**
@@ -34,6 +42,14 @@ public class Bindings {
 		if (!StdDraw.hasNextKeyTyped())
 			return;
 		KeyEvent key = StdDraw.nextKeyTyped();
+		
+		///////////////////////////////////////
+		//code cheat
+		for(CodeCheat code : this.cheatCode)
+			code.newKey(key.getKeyCode());
+		
+		//////////////////////////////////////
+		//key
 		
 		if (key.getKeyCode() == KeyEvent.VK_ESCAPE)
 			System.exit(0);
@@ -154,4 +170,68 @@ public class Bindings {
 		}
 	}
 	
+	//cheat code
+	/**
+	 * Class representant un code cheat
+	 * @author clementL
+	 *
+	 */
+	private abstract class CodeCheat{
+		
+		protected int[] sequence;
+		protected int i;
+		
+		protected CodeCheat (int[] sequence) {
+			this.sequence = sequence;
+			this.i = 0;
+		}
+		
+		/**
+		 * load a new key
+		 * @param key the key to load
+		 */
+		protected final void newKey(int key) {
+			if(key == this.sequence[this.i]) {
+				this.i ++ ;
+				if(this.i >= this.sequence.length) {
+					this.toDo();
+					this.i = 0;
+				}
+			}else {
+				this.i = 0;
+			}
+		}
+		
+		/**
+		 * the action to do if the code cheat is actif
+		 */
+		protected abstract void toDo();
+	}
+	
+	
+	private class CodeGetWeapon extends CodeCheat{
+
+		protected CodeGetWeapon(int[] sequence) {
+			super(sequence);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		protected void toDo() {
+			// TODO Auto-generated method stub
+			CheatWeapon weapon = new CheatWeapon();
+			w.player.addNewWeapon(weapon);
+		}
+		
+		private class CheatWeapon extends DummyGun{
+			public CheatWeapon() {
+				name = "cheat";
+				requiredPower = 0;
+				chargeTime = 1;
+				shotDamage = Integer.MAX_VALUE;
+				shotPerCharge = 1;
+			}
+		}
+		
+	}
 }

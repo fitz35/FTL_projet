@@ -155,16 +155,16 @@ public class WeaponControl extends Module {
 			StdDraw.setPenColor(StdDraw.GRAY);
 			if (w.getCurrentCharge() == w.getChargeTime())
 				StdDraw.setPenColor(StdDraw.YELLOW);
-			StdDraw.filledRectangle(x+0.1+(0.45*i), y+0.1, 0.045, (w.getCurrentCharge()/w.getChargeTime())*0.035);
+			StdDraw.filledRectangle(x+0.1+(0.09*i), y+0.1, 0.045, (w.getCurrentCharge()/w.getChargeTime())*0.035);
 			if (w.isActivated())
 				StdDraw.setPenColor(StdDraw.CYAN);
 			if (weaponBtns[i] == null)
-				weaponBtns[i] = new WeaponButton(new Vector2<Double>(x+0.1+(0.45*i), y+0.1), new Vector2<Double>(0.045, 0.035), i);
+				weaponBtns[i] = new WeaponButton(new Vector2<Double>(x+0.1+(0.09*i), y+0.1), new Vector2<Double>(0.045, 0.035), i);
 			else
 				weaponBtns[i].draw();
-			StdDraw.rectangle(x+0.1+(0.45*i), y+0.1, 0.045, 0.035);
+			StdDraw.rectangle(x+0.1+(0.09*i), y+0.1, 0.045, 0.035);
 			StdDraw.setPenColor(StdDraw.BLACK);
-			StdDraw.text(x+0.1+(0.45*i), y+0.1, w.getName());
+			StdDraw.text(x+0.1+(0.09*i), y+0.1, w.getName());
 		}
 	}
 	
@@ -180,6 +180,7 @@ public class WeaponControl extends Module {
 			return null;
 		Vector2<Double> v = tile.getPosition();
 		weapons[weapon].resetCharge();
+		
 		return weapons[weapon].shot(new Vector2<Double>(v.getX(), v.getY()), dir);
 	}
 	

@@ -127,4 +127,16 @@ public abstract class Module extends Tile {
 	public int		getAmountDamage()		{ return amountDamage;		}
 	public boolean 	getCanBeManned() 		{ return canBeManned; 		}
 	
+	////////////
+	// setter //
+	////////////
+	/**
+	 * set the level of the module if it possible
+	 * @param level the level to set
+	 */
+	public void setLevel(int level) {
+		if(level <= this.maxLevel)
+			this.currentLevel = level;
+	}
+	
 }

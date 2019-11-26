@@ -124,8 +124,7 @@ public class Tile {
 	 * @param w the weapon to assign
 	 */
 	public void setWeapon(Weapon w) {
-		if (weapon == null)
-			weapon = w;
+		weapon = w;
 	}
 
 	/**
@@ -209,4 +208,11 @@ public class Tile {
 		member = null;
 	}
 	
+	/**
+	 * get the member on the tile if he exist
+	 * @return the member on the tile if he exist null instead
+	 */
+	public CrewMember getMember () {
+		return this.member;
+	}
 }

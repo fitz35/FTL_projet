@@ -50,8 +50,10 @@ public abstract class Button {
 	protected abstract void onMiddleClick();
 	
 	public void draw() {
-		if (draw)
+		if (draw) {
+			StdDraw.setPenColor(StdDraw.BLACK);
 			StdDraw.rectangle(pos.getX(), pos.getY(), dim.getX(), dim.getY());
+		}
 	}
 	
 	public Vector2<Double> getPosition(){

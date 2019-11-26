@@ -42,6 +42,7 @@ public class DummyGun extends Weapon {
 	 */
 	@Override
 	public Projectile shot(Vector2<Double> pos, Vector2<Double> dir) {
+		
 		return new DummyGunProjectile(pos, dir);
 	}
 

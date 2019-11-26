@@ -250,6 +250,7 @@ public abstract class Ship {
 	 */
 	public void deactiveWeapon(int weapon) {
 		weaponControl.deactiveWeapon(weapon);
+		this.getFirstTile().setWeapon(null);
 	}
 	
 	/**
@@ -258,6 +259,7 @@ public abstract class Ship {
 	 */
 	public void activeWeapon(int weapon) {
 		weaponControl.activeWeapon(weapon);
+		this.getFirstTile().setWeapon(weaponControl.getWeapon(weapon));
 	}
 	
 	/**
@@ -279,6 +281,8 @@ public abstract class Ship {
 		if (p != null && this.target != null) {
 			p.computeDirection(this.target.getCenterPosition());
 			projectiles.add(p);
+		}else if(this.target == null) {
+			System.err.println("Pas de cible !");
 		}
 	}
 	
@@ -462,14 +466,14 @@ public abstract class Ship {
 	}
 	
 	/**
-	 * teleport the selected crew member on the selected tile if they existe
+	 * teleport the selected crew member on the selected tile if they existe and swap if the tile is occuped
 	 */
 	public void teleportCrewMember() {
-		//on ne peux avoir qu'un membre par tile
-		if(this.isCrewMemberSelected() && this.crewTile != null && !this.crewTile.hasCrewMember()) {
+		//on ne peux avoir qu'un membre par tile, si deja occuper swap
+		if(this.isCrewMemberSelected() && this.crewTile != null) {
 			for(Tile tile : this.layout) {
 				if(tile.isCrewMember(this.selectedMember)) {
-					tile.removeCrewMember();
+					tile.setCrewMember(this.crewTile.getMember());
 					break;
 				}
 			}
@@ -492,4 +496,27 @@ public abstract class Ship {
 		}
 	}
 	
+	/**
+	 * get the curent hull of the ship
+	 * @return the curent hull of the ship
+	 */
+	public int getCurentHull () {
+		return this.currentHull;
+	}
+	
+	/**
+	 * return the modules of the ship
+	 * @return the modules of the ship
+	 */ 
+	public Module[] getModule () {
+		return this.modules;
+	}
+	
+	/**
+	 * set a new weapon
+	 * @param weapon to set
+	 */
+	public void addNewWeapon(Weapon weapon) {
+		this.weaponControl.addWeapon(weapon);
+	}
 }
