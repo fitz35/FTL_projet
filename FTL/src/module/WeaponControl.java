@@ -64,7 +64,7 @@ public class WeaponControl extends Module {
 		maxLevel = 8;
 		currentLevel = initialLevel;
 		allocatedEnergy = 0;
-		amountDamage = 0;
+		amountDamage = 1;
 		canBeManned = true;
 		weapons = new Weapon[amountWeapons];
 		weaponBtns = new WeaponButton[amountWeapons];

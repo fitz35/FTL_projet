@@ -60,7 +60,7 @@ public abstract class Ship {
 			return;
 		else {
 			if(this.ia == null)
-				this.ia = new IA(this, player); 
+				this.ia = new IAv1(this, player); 
 			this.ia.step();
 		}
 	}
@@ -156,27 +156,32 @@ public abstract class Ship {
 		selectedMember.unselect();
 		selectedMember = null;
 		//on deselectionne la case
-		this.crewTile.unmarkTarget();
+		if(this.isPlayer)
+			this.crewTile.unmarkTarget();
 	}
 
 	/**
 	 * Selects the crew member.
 	 * @param i -th crew member
+	 * @return if a member was selected
 	 */
-	public void selectMember(int i) {
+	public boolean selectMember(int i) {
 		int j = 0;
 		//on selectionne (ou reselectionne) la case
 		if(this.crewTile == null)
 			this.crewTile = this.getFirstTile();
-		this.crewTile.markTarget();
+		
+		if(this.isPlayer)
+			this.crewTile.markTarget();
 		
 		for (CrewMember m : crew) {
 			if (j++ == i) {
 				selectedMember = m;
 				selectedMember.select();
-				return;
+				return true;
 			}
 		}
+		return false;
 	}
 	
 	/**
@@ -201,12 +206,7 @@ public abstract class Ship {
 				return;
 			}else{
 				this.crewTile.unmarkTarget();
-				int n = ((ArrayList<Tile>) this.layout).indexOf(this.crewTile);
-				if(n < this.layout.size() - 1) {
-					this.crewTile = ((ArrayList<Tile>) this.layout).get(n + 1);
-				}else {
-					this.crewTile = this.getFirstTile();
-				}
+				this.crewTile = Tile.getLeftTile(this.layout, this.crewTile);
 				this.crewTile.markTarget();
 				return;
 			}
@@ -220,12 +220,7 @@ public abstract class Ship {
 				return;
 			}else{
 				this.crewTile.unmarkTarget();
-				int n = ((ArrayList<Tile>) this.layout).indexOf(this.crewTile);
-				if(n > 0) {
-					this.crewTile = ((ArrayList<Tile>) this.layout).get(n - 1);
-				}else {
-					this.crewTile = ((ArrayList<Tile>) this.layout).get(this.layout.size() - 1);
-				}
+				this.crewTile = Tile.getRightTile(this.layout, this.crewTile);
 				this.crewTile.markTarget();
 				return;
 			}
@@ -420,6 +415,7 @@ public abstract class Ship {
 			this.currentHull -= p.getDamage();
 			if(touche instanceof Module) {//si on touche un module on applique l'effet
 				p.applyEffect((Module)touche);
+				((Module)touche).appliqueDmg(p.getDamage());
 			}
 		}
 	}
@@ -437,12 +433,7 @@ public abstract class Ship {
 			return;
 		}else{
 			this.target.unmarkTarget();
-			int n = ((ArrayList<Tile>) opponent.layout).indexOf(this.target);
-			if(n > 0) {
-				this.target = ((ArrayList<Tile>) opponent.layout).get(n - 1);
-			}else {
-				this.target = ((ArrayList<Tile>) opponent.layout).get(opponent.layout.size() - 1);
-			}
+			this.target = Tile.getUpTile(opponent.layout, this.target);
 			this.target.markTarget();
 			return;
 		}
@@ -459,33 +450,13 @@ public abstract class Ship {
 			return;
 		}else{
 			this.target.unmarkTarget();
-			int n = ((ArrayList<Tile>) opponent.layout).indexOf(this.target);
-			if(n < opponent.layout.size() - 1) {
-				this.target = ((ArrayList<Tile>) opponent.layout).get(n + 1);
-			}else {
-				this.target = opponent.getFirstTile();
-			}
+			this.target = Tile.getDownTile(opponent.layout, this.target);
 			this.target.markTarget();
 			return;
 		}
 	}
 	
 	/**
-	 * TODO
-	 * Aims the guns left.
-	 * @param opponent the ship to aim at
-	 */
-	public void aimLeft(Ship opponent) {
-		if (target == null) {
-			target = opponent.getFirstTile();
-			target.markTarget();
-			return;
-		}
-		System.err.println("Aiming System Critical Failure !");
-	}
-
-	/**
-	 * TODO
 	 * Aims the guns right.
 	 * @param opponent the ship to aim at
 	 */
@@ -494,10 +465,31 @@ public abstract class Ship {
 			target = opponent.getFirstTile();
 			target.markTarget();
 			return;
+		
+		}else{
+			this.target.unmarkTarget();
+			this.target = Tile.getRightTile(opponent.layout, this.target);
+			this.target.markTarget();
+			return;
 		}
-		System.err.println("Aiming System Critical Failure !");
 	}
 	
+	/**
+	 * Aims the guns left.
+	 * @param opponent the ship to aim at
+	 */
+	public void aimLeft(Ship opponent) {
+		if (target == null) {
+			target = opponent.getFirstTile();
+			target.markTarget();
+			return;
+		}else{
+			this.target.unmarkTarget();
+			this.target = Tile.getLeftTile(opponent.layout, this.target);
+			this.target.markTarget();
+			return;
+		}
+	}
 	///////////////
 	//getter and setter//
 	/////////////////////

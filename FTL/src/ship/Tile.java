@@ -1,4 +1,6 @@
 package ship;
+import java.util.Collection;
+
 import display.StdDraw;
 import display.Vector2;
 import weapon.Weapon;
@@ -214,5 +216,138 @@ public class Tile {
 	 */
 	public CrewMember getMember () {
 		return this.member;
+	}
+	
+	//////////////////////////
+	//comparaison and traitement
+	///////////////////////////
+
+	
+	/**
+	 * get the closest right tile from t in the colection, or himself if they isn't
+	 * @param tiles the collection
+	 * @param t the initiale tile
+	 * @return the closest right tile from t in the colection, or himself if they isn't
+	 */
+	public static Tile getRightTile(Collection<Tile> tiles, Tile t) {
+		Tile retour = t;
+		
+		for(Tile tile : tiles) {
+			if(tile != t && tile.getCenterPosition().getX() > t.getCenterPosition().getX()) {
+				if(t != retour) {
+					if(getHorizontalDistanceTile(t, tile) < getHorizontalDistanceTile(t, retour) || (
+							getHorizontalDistanceTile(t, tile) == getHorizontalDistanceTile(t, retour) &&
+							getVerticalDistanceTile(t, tile) < getVerticalDistanceTile(t, retour))) {
+							retour = tile;
+						
+					}
+				}else {
+					retour = tile;
+				}
+			}
+		}
+		
+		return retour;
+	}
+	
+	/**
+	 * get the closest left tile from t in the colection, or himself if they isn't
+	 * @param tiles the collection
+	 * @param t the initiale tile
+	 * @return the closest left tile from t in the colection, or himself if they isn't
+	 */
+	public static Tile getLeftTile(Collection<Tile> tiles, Tile t) {
+		Tile retour = t;
+		
+		for(Tile tile : tiles) {
+			if(tile != t && tile.getCenterPosition().getX() < t.getCenterPosition().getX()) {
+				if(t != retour) {
+					if(getHorizontalDistanceTile(t, tile) < getHorizontalDistanceTile(t, retour) || (
+							getHorizontalDistanceTile(t, tile) == getHorizontalDistanceTile(t, retour) &&
+							getVerticalDistanceTile(t, tile) < getVerticalDistanceTile(t, retour))) {
+							retour = tile;
+						
+					}
+				}else {
+					retour = tile;
+				}
+			}
+		}
+		
+		return retour;
+	}
+	
+	/**
+	 * get the closest up tile from t in the colection, or himself if they isn't
+	 * @param tiles the collection
+	 * @param t the initiale tile
+	 * @return the up right tile from t in the colection, or himself if they isn't
+	 */
+	public static Tile getUpTile(Collection<Tile> tiles, Tile t) {
+		Tile retour = t;
+		
+		for(Tile tile : tiles) {
+			if(tile != t && tile.getCenterPosition().getY() > t.getCenterPosition().getY()) {
+				if(t != retour) {
+					if(getVerticalDistanceTile(t, tile) < getVerticalDistanceTile(t, retour) || (
+							getVerticalDistanceTile(t, tile) == getVerticalDistanceTile(t, retour) && 
+							getHorizontalDistanceTile(t, tile) < getHorizontalDistanceTile(t, retour))) {
+							retour = tile;
+						
+					}
+				}else {
+					retour = tile;
+				}
+			}
+		}
+		
+		return retour;
+	}
+	
+	/**
+	 * get the closest down tile from t in the colection, or himself if they isn't
+	 * @param tiles the collection
+	 * @param t the initiale tile
+	 * @return the closest down tile from t in the colection, or himself if they isn't
+	 */
+	public static Tile getDownTile(Collection<Tile> tiles, Tile t) {
+		Tile retour = t;
+		
+		for(Tile tile : tiles) {
+			if(tile != t && tile.getCenterPosition().getY() < t.getCenterPosition().getY()) {
+				if(t != retour) {
+					if(getVerticalDistanceTile(t, tile) < getVerticalDistanceTile(t, retour) || (
+							getVerticalDistanceTile(t, tile) == getVerticalDistanceTile(t, retour) && 
+							getHorizontalDistanceTile(t, tile) < getHorizontalDistanceTile(t, retour))) {
+							retour = tile;
+						
+					}
+				}else {
+					retour = tile;
+				}
+			}
+		}
+		
+		return retour;
+	}
+	
+	
+	/**
+	 * Return the horizontale distance beetween two tile in tile
+	 * @param tile1 the first tile
+	 * @param tile2 the second tile
+	 * @return the horizontale distance beetween two tile in tile
+	 */
+	private static int getHorizontalDistanceTile(Tile tile1, Tile tile2) {
+		return (int) (Math.round(Math.abs(tile1.getCenterPosition().getX() - tile2.getCenterPosition().getX())/Tile.WIDTH));
+	}
+	/**
+	 * Return the Vertical distance beetween two tile in tile
+	 * @param tile1 the first tile
+	 * @param tile2 the second tile
+	 * @return the Vertical distance beetween two tile in tile
+	 */
+	private static int getVerticalDistanceTile(Tile tile1, Tile tile2) {
+		return (int) (Math.round(Math.abs(tile1.getCenterPosition().getY() - tile2.getCenterPosition().getY())/Tile.HEIGHT));
 	}
 }

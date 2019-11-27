@@ -138,4 +138,13 @@ public abstract class Module extends Tile {
 			this.currentLevel = this.currentLevel + 1;
 	}
 	
+	/**
+	 * apply the dmg on the module
+	 * @param dmg the the damage to apply
+	 */
+	public void appliqueDmg(int dmg) {
+		if(this.amountDamage != -1)//pas le reacteur
+			this.amountDamage += dmg;
+	}
+	
 }
