@@ -30,11 +30,12 @@ public class CombatWorld {
 	/**
 	 * Creates the world with the bindings, the player ship
 	 * and the opponent ship.
+	 * @param playerShip the player's ship
 	 */
-	public CombatWorld() {
+	public CombatWorld(Ship playerShip) {
 		this.level = 0;
 		bind = new BindingsCombatWorld(this);
-		player = new DummyShip(true, new Vector2<Double>(0.3, 0.5));
+		player = playerShip;
 		genNewOpponentShip();
 		time = System.currentTimeMillis();
 		this.moduleButton = new ArrayList<ModuleButton>();
@@ -51,33 +52,34 @@ public class CombatWorld {
 	
 	/**
 	 * Makes a step in the world.
+	 * @return true si on a finis la manche
 	 */
-	public void step() {
-		//on clean les bouttons
-		for(ModuleButton button : this.moduleButton) {
-			button.destroy();
-		}
-		this.moduleButton.clear();
+	public boolean step() {
 		//on gere les upgrades du player et la regeneration du ship adverse
-		if(this.amelioration != -1) {
+		if(this.amelioration != -1 && this.moduleToUpgrade != null) {
 			this.upgrade(this.player, true);
 			this.amelioration = -1;
-		}
-		if(this.moduleToUpgrade != null) {
 			this.moduleToUpgrade.addLevel();
-			genNewOpponentShip();
 			this.moduleToUpgrade = null;
+			return true;
+		}else{
+			//on clean les bouttons
+			for(ModuleButton button : this.moduleButton) {
+				button.destroy();
+			}
+			this.moduleButton.clear();
+			//on avance le monde	
+			player.step(((double) (System.currentTimeMillis()-time))/1000);
+			opponent.step(((double) (System.currentTimeMillis()-time))/1000);
+				
+			opponent.ai(player);
+				
+			processHit(player.getProjectiles(), true);
+			processHit(opponent.getProjectiles(), false);
+				
+			time = System.currentTimeMillis();
+			return false;
 		}
-		//on avance le monde	
-		player.step(((double) (System.currentTimeMillis()-time))/1000);
-		opponent.step(((double) (System.currentTimeMillis()-time))/1000);
-			
-		opponent.ai(player);
-			
-		processHit(player.getProjectiles(), true);
-		processHit(opponent.getProjectiles(), false);
-			
-		time = System.currentTimeMillis();
 	}
 	
 	/**
@@ -108,11 +110,15 @@ public class CombatWorld {
 	 * Draws the ships and HUDs.
 	 */
 	public void draw() {
-		player.draw();
-		player.drawHUD();
-		
-		opponent.draw();
-		opponent.drawHUD();
+		if(this.isPlayerWin()) {
+			this.drawVictoryHud();
+		}else {
+			player.draw();
+			player.drawHUD();
+			
+			opponent.draw();
+			opponent.drawHUD();
+		}
 		
 	}
 	
@@ -136,7 +142,7 @@ public class CombatWorld {
 	/**
 	 * gen a new opponent ship of the level
 	 */
-	private void genNewOpponentShip() {
+	public void genNewOpponentShip() {
 		this.opponent = new DummyShip(false, new Vector2<Double>(0.8, 0.5));
 		
 		for(int i = 0 ; i < this.level ; i++) {
