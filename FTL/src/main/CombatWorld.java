@@ -44,6 +44,17 @@ public class CombatWorld {
 	}
 	
 	/**
+	 * prepare the world for another combat
+	 */
+	public void prepareForNewCombat() {
+		this.genNewOpponentShip();
+		this.player.clean();
+		this.amelioration = -1;
+		this.moduleToUpgrade = null;
+	}
+	
+	
+	/**
 	 * Processes the key pressed.
 	 */
 	public void processKey(){
@@ -136,13 +147,13 @@ public class CombatWorld {
 	 * @return if the opponent is dead and the player haven't choose his reward
 	 */
 	public boolean isPlayerWin() {
-		return this.opponent.getCurentHull() <= 0 && this.moduleToUpgrade == null;
+		return this.opponent.getCurentHull() <= 0 ;
 	}
 	
 	/**
 	 * gen a new opponent ship of the level
 	 */
-	public void genNewOpponentShip() {
+	private void genNewOpponentShip() {
 		this.opponent = new DummyShip(false, new Vector2<Double>(0.8, 0.5));
 		
 		for(int i = 0 ; i < this.level ; i++) {

@@ -8,14 +8,33 @@ public class Player {
 	private Vector2<Integer> posOnMap; // position of the player on the map (with integer coordinate). It begin at 0/0
 	private boolean hasBeenMooved; //if the player has been mooved
 	private String sector; //type of the sector who is the player
+	private int coins; //the coin of the player
 	
+	/**
+	 * construct the player
+	 * @param ship the ship of the player
+	 */
 	public Player(Ship ship) {
 		// TODO Auto-generated constructor stub
 		this.setShip(ship);
 		this.posOnMap = null;
 		this.setHasBeenMooved();
 		this.sector = null;
+		this.setCoins(10);
 	}
+	
+	/**
+	 * draw information on the player
+	 */
+	public void drawHud() {
+		
+	}
+	
+	
+	//////////////////////////////////////////
+	//getter/setter
+	//////////////////////////////////////////
+	
 
 	/**
 	 * @return the ship
@@ -67,6 +86,20 @@ public class Player {
 	 */
 	public String getSector() {
 		return sector;
+	}
+
+	/**
+	 * @return the coins
+	 */
+	public int getCoins() {
+		return coins;
+	}
+
+	/**
+	 * @param coins the coins to set
+	 */
+	public void setCoins(int coins) {
+		this.coins = coins;
 	}
 
 }

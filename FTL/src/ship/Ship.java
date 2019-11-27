@@ -75,6 +75,14 @@ public abstract class Ship {
 		this.repareModule(elapsedTime);
 	}
 	
+	/**
+	 * clean the variable of ship's step
+	 */
+	public void clean() {
+		this.projectiles.clear();
+		this.target = null;
+	}
+	
 	// Drawing Methods
 	
 	/**
