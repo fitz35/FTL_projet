@@ -7,7 +7,7 @@ package map;
 public class RessourceSector extends Sector {
 
 	public RessourceSector() {
-		super("");
+		super("ressources/images/ressource.png");
 		// TODO Auto-generated constructor stub
 	}
 
