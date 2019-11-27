@@ -9,16 +9,16 @@ import weapon.DummyGun;
 /**
  * The bindings class processes the key pressed by the player.
  */
-public class Bindings {
+public class BindingsCombatWorld {
 
-	private World w;		// The world on which the actions act
+	private CombatWorld w;		// The world on which the actions act
 	private Collection<CodeCheat> cheatCode; //the cheatCode
 	 
 	/**
 	 * Create the bindings
 	 * @param w the world
 	 */
-	public Bindings(World w) {
+	public BindingsCombatWorld(CombatWorld w) {
 		this.w=w;
 		
 		this.cheatCode = new ArrayList<CodeCheat> ();
@@ -176,7 +176,7 @@ public class Bindings {
 	 * @author clementL
 	 *
 	 */
-	private abstract class CodeCheat{
+	public abstract class CodeCheat{
 		
 		protected int[] sequence;
 		protected int i;

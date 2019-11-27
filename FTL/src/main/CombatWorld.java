@@ -14,9 +14,9 @@ import weapon.Projectile;
 /**
  * The world contains the ships and draws them to screen.
  */
-public class World {
+public class CombatWorld {
 	
-	private Bindings 	bind;	// The bindings of the game.
+	private BindingsCombatWorld 	bind;	// The bindings of the game.
 	private long 		time;	// The current time 
 	
 	private int 		level;  // The curent level of the opponent ship (= the difficulty)
@@ -31,9 +31,9 @@ public class World {
 	 * Creates the world with the bindings, the player ship
 	 * and the opponent ship.
 	 */
-	public World() {
+	public CombatWorld() {
 		this.level = 0;
-		bind = new Bindings(this);
+		bind = new BindingsCombatWorld(this);
 		player = new DummyShip(true, new Vector2<Double>(0.3, 0.5));
 		genNewOpponentShip();
 		time = System.currentTimeMillis();

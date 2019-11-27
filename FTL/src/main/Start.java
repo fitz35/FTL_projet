@@ -19,7 +19,7 @@ public class Start {
 		StdDraw.enableDoubleBuffering();
 		
 		// Creates the world
-		World w = new World();
+		CombatWorld w = new CombatWorld();
 		
 		// Game infinite loop -> j'usqu'a ce que le joueur meure
 		while(!w.isPlayerDead()) {
