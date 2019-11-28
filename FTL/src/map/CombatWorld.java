@@ -1,10 +1,11 @@
-package main;
+package map;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import display.Button;
 import display.StdDraw;
 import display.Vector2;
+import main.BindingsCombatWorld;
 import module.Module;
 import ship.CrewMember;
 import ship.DummyShip;
@@ -24,8 +25,8 @@ public class CombatWorld {
 	private int amelioration;   // The number of the amélioration to give to the player
 	private Module moduleToUpgrade; //the module to upgrade
 	
-	Ship player;				// The ship of the player
-	Ship opponent;				// The ship of the opponent
+	public Ship player;				// The ship of the player
+	public Ship opponent;				// The ship of the opponent
 	
 	/**
 	 * Creates the world with the bindings, the player ship

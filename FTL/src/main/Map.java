@@ -2,6 +2,7 @@ package main;
 
 import display.StdDraw;
 import display.Vector2;
+import map.MarketSector;
 import map.Sector;
 
 /**
@@ -31,7 +32,10 @@ public class Map {
 	
 	private BindingsMap bind; // the bind for the map
 	
-	
+	/**
+	 * construct a map
+	 * @param player the player who play
+	 */
 	public Map(Player player) {
 		this.map = new Sector[NB_SECTOR][NB_SECTOR];
 		//generation de la map
@@ -42,7 +46,7 @@ public class Map {
 				if(rand < TAUX_VAISSEAU) {
 					this.map[y][x] = new Sector("ressources/images/ship.png", Sector.SECTOR_SHIP);
 				}else if(rand < TAUX_VAISSEAU + TAUX_MAGASIN) {
-					this.map[y][x] = new Sector("ressources/images/coin.png", Sector.SECTOR_MARKET);
+					this.map[y][x] = new MarketSector(this.player);
 				}else {
 					this.map[y][x] = new Sector("ressources/images/ressource.png", Sector.SECTOR_RESSOURCE);
 				}
@@ -64,7 +68,7 @@ public class Map {
 	
 	
 	/**
-	 * draw the map or the evenement
+	 * draw the map
 	 */
 	public void draw() {
 		for(int y = 0 ; y < this.map.length ; y++) {
@@ -164,6 +168,7 @@ public class Map {
 			map[pos.getY()][pos.getX() - 1].setVisible();
 		}
 	}
+	
 	/**
 	 * return if the Sector has Been already visited
 	 * @param x the x coordinate
@@ -173,5 +178,15 @@ public class Map {
 	 */
 	public boolean isDecouvert(int x, int y) {
 		return this.map[y][x].isHasBeenVisited();
+	}
+	
+	/**
+	 * if the player is on a market sector, lunch the market
+	 */
+	public void lunchMarket() {
+		Vector2<Integer> pos = this.player.getPosOnMap();
+		if(this.map[pos.getY()][pos.getX()] instanceof MarketSector) {
+			((MarketSector) this.map[pos.getY()][pos.getX()]).lunch();
+		}
 	}
 }

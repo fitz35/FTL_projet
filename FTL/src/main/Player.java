@@ -4,6 +4,10 @@ import display.Vector2;
 import ship.Ship;
 
 public class Player {
+	
+	
+	
+	
 	private Ship ship; //ship of the player
 	private Vector2<Integer> posOnMap; // position of the player on the map (with integer coordinate). It begin at 0/0
 	private boolean hasBeenMooved; //if the player has been mooved
@@ -20,7 +24,7 @@ public class Player {
 		this.posOnMap = null;
 		this.setHasBeenMooved();
 		this.sector = null;
-		this.setCoins(10);
+		this.coins = 10;
 	}
 	
 	/**
@@ -96,10 +100,18 @@ public class Player {
 	}
 
 	/**
-	 * @param coins the coins to set
+	 * add coin to the player
+	 * @param coins the coins to add
 	 */
-	public void setCoins(int coins) {
-		this.coins = coins;
+	public void addCoins(int coins) {
+		this.coins += coins;
 	}
 
+	/**
+	 * remove coin to the player
+	 * @param coins the coins to remove
+	 */
+	public void removeCoins(int coins) {
+		this.coins -= coins;
+	}
 }

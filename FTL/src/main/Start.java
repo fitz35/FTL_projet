@@ -1,6 +1,7 @@
 package main;
 import display.StdDraw;
 import display.Vector2;
+import map.CombatWorld;
 import map.Sector;
 import ship.DummyShip;
 
@@ -32,8 +33,7 @@ public class Start {
 				// Clears the canvas of the previous frame
 				StdDraw.clear();
 				
-				if(p.isHasBeenMooved() && !m.isDecouvert(p.getPosOnMap().getX(), p.getPosOnMap().getY()) &&
-						p.getSector() != Sector.SECTOR_RESSOURCE) {
+				if(p.isHasBeenMooved() && !m.isDecouvert(p.getPosOnMap().getX(), p.getPosOnMap().getY())) {
 					if(p.getSector() == Sector.SECTOR_SHIP) {
 						// Processes the key pressed during the last frame
 						w.processKey();
@@ -41,8 +41,12 @@ public class Start {
 							p.setHasBeenMooved();
 						// Draws the world to the canvas
 						w.draw();
-					}else {
-						
+					}else if(p.getSector() == Sector.SECTOR_RESSOURCE){
+						p.addCoins(50);
+						p.setHasBeenMooved();
+					}else if(p.getSector() == Sector.SECTOR_MARKET){
+						m.lunchMarket();
+						p.setHasBeenMooved();
 					}
 				}else {
 					if(w.isPlayerWin())//si le joueur a deja gagner une fois, on regen le ship adverse

@@ -5,7 +5,6 @@ import java.awt.Color;
 import display.StdDraw;
 import display.Vector2;
 import module.Module;
-import ship.Tile;
 
 /**
  * A projectile is shot by a weapon at a position and 

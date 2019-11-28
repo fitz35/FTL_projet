@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import display.StdDraw;
+import map.CombatWorld;
 import weapon.DummyGun;
 
 /**
