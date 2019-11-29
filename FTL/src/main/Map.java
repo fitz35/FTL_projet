@@ -45,9 +45,6 @@ public class Map {
 		//generation de la map
 		for(int y = 0 ; y < this.map.length ; y++) {
 			for(int x = 0 ; x < this.map[y].length ; x++){
-				if(y == 0 && x == 0)
-					this.map[0][0] = new MarketSector(this.player);
-				else {
 				double rand = Math.random();
 				
 				if(rand < TAUX_VAISSEAU) {
@@ -56,7 +53,6 @@ public class Map {
 					this.map[y][x] = new MarketSector(this.player);
 				}else {
 					this.map[y][x] = new Sector("ressources/images/ressource.png", Sector.SECTOR_RESSOURCE);
-				}
 				}
 			}
 		}
