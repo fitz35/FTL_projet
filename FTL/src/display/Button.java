@@ -8,13 +8,17 @@ public abstract class Button {
 	private 		boolean			draw;
 	private 		boolean 		running = true;
 	private final 	Thread			thread;
+	private String nom;
 	
-	public Button(Vector2<Double> pos, Vector2<Double> dim) { this(pos, dim, false); }
+	public Button(Vector2<Double> pos, Vector2<Double> dim) { this(pos, dim, false, ""); }
+	
+	public Button(Vector2<Double> pos, Vector2<Double> dim, boolean draw) { this(pos, dim, draw, ""); }
 
-	public Button(Vector2<Double> pos, Vector2<Double> dim, boolean draw) {
+	public Button(Vector2<Double> pos, Vector2<Double> dim, boolean draw, String nom) {
 		this.pos = pos;
 		this.dim = dim;
 		this.draw = draw;
+		this.nom = nom;
 		thread = new Thread(
 				()
 				->
@@ -53,6 +57,7 @@ public abstract class Button {
 		if (draw) {
 			StdDraw.setPenColor(StdDraw.BLACK);
 			StdDraw.rectangle(pos.getX(), pos.getY(), dim.getX(), dim.getY());
+			StdDraw.textLeft(pos.getX(), pos.getY() + dim.getY()/2, nom);
 		}
 	}
 	

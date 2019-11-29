@@ -38,6 +38,8 @@ public class Map {
 	 */
 	public Map(Player player) {
 		this.map = new Sector[NB_SECTOR][NB_SECTOR];
+		this.player = player;
+		
 		//generation de la map
 		for(int y = 0 ; y < this.map.length ; y++) {
 			for(int x = 0 ; x < this.map[y].length ; x++){
@@ -52,7 +54,7 @@ public class Map {
 				}
 			}
 		}
-		this.player = player;
+		
 		this.player.setPosOnMap(new Vector2<Integer>(0, 0), this.map[0][0].getType());
 		this.decouvre();
 		
