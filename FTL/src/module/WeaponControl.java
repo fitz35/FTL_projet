@@ -208,5 +208,18 @@ public class WeaponControl extends Module {
 		return false;
 	}
 	
-	
+	/**
+	 * damage the module for the WeaponControl and deactivates
+	 * weapons if energy is not sufficient anymore.
+	 */
+	@Override
+	public void appliqueDmg(int dmg) {
+		super.appliqueDmg(dmg);
+		for(Weapon w : this.weapons) {
+			if(w != null) {
+				if(this.currentLevel - this.amountDamage < w.getRequiredPower())//on desactive si on n'a pas assez d'energie apres les damage
+					w.deactive();
+			}
+		}
+	}
 }

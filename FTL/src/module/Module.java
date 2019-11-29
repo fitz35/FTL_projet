@@ -143,8 +143,9 @@ public abstract class Module extends Tile {
 	 * @param dmg the the damage to apply
 	 */
 	public void appliqueDmg(int dmg) {
-		if(this.amountDamage != -1)//pas le reacteur
+		if(this.amountDamage != -1) {//pas le reacteur
 			this.amountDamage += dmg;
+		}
 	}
 	
 }

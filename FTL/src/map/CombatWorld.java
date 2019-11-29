@@ -210,7 +210,8 @@ public class CombatWorld {
 				amelio_string += "Une arme !";
 				break;
 			case 1:
-				amelio_string += "Une réparation entre 1 et 5 de l’intégrité de la coque !";
+				amelio_string += "Une réparation entre " + Ship.AMMOUNT_REPA_MIN + " et " + 
+									Ship.AMMOUNT_REPA_MAX + " de l’intégrité de la coque !";
 				break;
 			case 2:
 				amelio_string += "Un membre d’équipage !";
