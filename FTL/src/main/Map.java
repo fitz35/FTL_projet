@@ -32,6 +32,8 @@ public class Map {
 	
 	private BindingsMap bind; // the bind for the map
 	
+	private boolean drawPlayerHud;//if the map draw the player hud
+	
 	/**
 	 * construct a map
 	 * @param player the player who play
@@ -43,6 +45,9 @@ public class Map {
 		//generation de la map
 		for(int y = 0 ; y < this.map.length ; y++) {
 			for(int x = 0 ; x < this.map[y].length ; x++){
+				if(y == 0 && x == 0)
+					this.map[0][0] = new MarketSector(this.player);
+				else {
 				double rand = Math.random();
 				
 				if(rand < TAUX_VAISSEAU) {
@@ -52,6 +57,7 @@ public class Map {
 				}else {
 					this.map[y][x] = new Sector("ressources/images/ressource.png", Sector.SECTOR_RESSOURCE);
 				}
+				}
 			}
 		}
 		
@@ -59,6 +65,7 @@ public class Map {
 		this.decouvre();
 		
 		this.bind = new BindingsMap(this);
+		this.drawPlayerHud = false;
 	}
 	
 	/**
@@ -85,6 +92,10 @@ public class Map {
 								(1.0/NB_SECTOR) * pos.getY() + (1.0/NB_SECTOR)/2, 
 								(1.0/NB_SECTOR)/2, 
 								(1.0/NB_SECTOR)/2);
+		
+		if(this.drawPlayerHud) {
+			this.player.drawHud();
+		}
 	}
 	
 	
@@ -190,5 +201,12 @@ public class Map {
 		if(this.map[pos.getY()][pos.getX()] instanceof MarketSector) {
 			((MarketSector) this.map[pos.getY()][pos.getX()]).lunch();
 		}
+	}
+	
+	/**
+	 * change the state of the player hud
+	 */
+	public void setDrawPlayerHud() {
+		this.drawPlayerHud = !this.drawPlayerHud;
 	}
 }

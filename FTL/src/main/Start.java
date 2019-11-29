@@ -1,4 +1,6 @@
 package main;
+import java.awt.event.KeyEvent;
+
 import display.StdDraw;
 import display.Vector2;
 import map.CombatWorld;
@@ -46,7 +48,7 @@ public class Start {
 						p.setHasBeenMooved();
 					}else if(p.getSector() == Sector.SECTOR_MARKET){
 						m.lunchMarket();
-						p.setHasBeenMooved();
+						//p.setHasBeenMooved();
 					}
 				}else {
 					if(w.isPlayerWin())//si le joueur a deja gagner une fois, on regen le ship adverse

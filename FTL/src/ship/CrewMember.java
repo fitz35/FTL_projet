@@ -2,11 +2,12 @@ package ship;
 
 import display.StdDraw;
 import display.Vector2;
+import map.Vendable;
 
 /**
  * A CrewMember is a character inside the ship.
  */
-public class CrewMember {
+public class CrewMember implements Vendable{
 	
 	private String 	name;		// The name of the crew member
 	private boolean isSelected; // Whether he/she is selected
@@ -55,5 +56,17 @@ public class CrewMember {
 	 */
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public int getPrice() {
+		// TODO Auto-generated method stub
+		return 5;
+	}
+
+	@Override
+	public String getDisplayName() {
+		// TODO Auto-generated method stub
+		return "Un membre d'equipage ! " + this.getName();
 	}
 }

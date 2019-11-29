@@ -1,6 +1,7 @@
 package weapon;
 
 import display.Vector2;
+import map.Vendable;
 
 /**
  * A weapon goes into a WeaponControl to be activated and
@@ -8,7 +9,7 @@ import display.Vector2;
  * for a shot command from the captain of the ship.
  * If deactivated, the weapon loses it charges progressively.
  */
-public abstract class Weapon {
+public abstract class Weapon implements Vendable{
 
 	protected String		name;
 	protected int 			requiredPower;
@@ -109,4 +110,16 @@ public abstract class Weapon {
 		return currentCharge >= chargeTime;
 	}
 	
+	
+	@Override
+	public int getPrice() {
+		// TODO Auto-generated method stub
+		return 10;
+	}
+
+	@Override
+	public String getDisplayName() {
+		// TODO Auto-generated method stub
+		return "Une nouvelle arme ! " + this.getName();
+	}
 }

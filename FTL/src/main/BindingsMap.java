@@ -41,7 +41,8 @@ public class BindingsMap {
 		
 		if (key.getKeyCode() == KeyEvent.VK_ESCAPE)
 			System.exit(0);
-		
+		else if (key.getKeyCode() == KeyEvent.VK_F1)
+			w.setDrawPlayerHud();
 		else if(key.getKeyCode() == KeyEvent.VK_UP)
 			this.w.deplacePlayerVertical(true);
 		else if(key.getKeyCode() == KeyEvent.VK_DOWN)

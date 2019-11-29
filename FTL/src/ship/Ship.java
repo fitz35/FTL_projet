@@ -35,6 +35,9 @@ public abstract class Ship {
 	
 	protected IA ia; // the ia of the opponent ship
 	
+	public static final int AMMOUNT_REPA_MIN = 5;//the amount max of the reparation
+	public static final int AMMOUNT_REPA_MAX = 8;//the amount max of the reparation
+	
 	/**
 	 * Creates a Ship for the player or the opponent at the provided position.
 	 * @param isPlayer whether the ship is for the player
@@ -511,10 +514,19 @@ public abstract class Ship {
 	}
 	
 	/**
-	 * repare the hull with an aleatoir value beetween 1 and 5
+	 * get the total hull of the ship
+	 * @return the total hull of the ship
+	 */
+	public int getTotalHull() {
+		return this.totalHull;
+	}
+	
+	/**
+	 * repare the hull with an aleatoir value beetween AMMOUNT_REPA_MIN and AMMOUNT_REPA_MAX
 	 */
 	public void repareHull () {
-		this.currentHull = (int) Math.min((this.currentHull + 1 + Math.round(Math.random() * 4)), this.totalHull);
+		this.currentHull = (int) Math.min((this.currentHull + AMMOUNT_REPA_MIN + 
+				Math.round(Math.random() * (AMMOUNT_REPA_MAX - AMMOUNT_REPA_MIN))), this.totalHull);
 	}
 	
 	/**

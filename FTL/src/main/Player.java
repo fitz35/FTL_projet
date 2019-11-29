@@ -1,5 +1,6 @@
 package main;
 
+import display.StdDraw;
 import display.Vector2;
 import ship.Ship;
 
@@ -31,7 +32,12 @@ public class Player {
 	 * draw information on the player
 	 */
 	public void drawHud() {
-		
+		StdDraw.setPenColor(StdDraw.WHITE);
+		StdDraw.filledRectangle(0.5, 1, 0.5, 0.05);
+		StdDraw.setPenColor(StdDraw.BLACK);
+		String text = "PV du vaisseau : " + this.ship.getCurentHull() + " sur " + this.ship.getTotalHull() +
+				     "    Coins : " + this.coins;
+		StdDraw.text(0.5, 0.975, text);
 	}
 	
 	
