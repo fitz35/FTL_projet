@@ -1,5 +1,4 @@
 package main;
-import java.awt.event.KeyEvent;
 
 import display.StdDraw;
 import display.Vector2;
@@ -39,20 +38,21 @@ public class Start {
 					if(p.getSector() == Sector.SECTOR_SHIP) {
 						// Processes the key pressed during the last frame
 						w.processKey();
-						if(w.step())//si on a finis la manche
+						if(w.step()) {//si on a finis la manche
 							p.setHasBeenMooved();
-						// Draws the world to the canvas
-						w.draw();
+							p.addCoins(w.getCoinsEarn());
+						}else {
+							// Draws the world to the canvas
+							w.draw();
+						}
 					}else if(p.getSector() == Sector.SECTOR_RESSOURCE){
-						p.addCoins(50);
+						p.addCoins(Map.COINS_EARN_ON_DEPOSIT);
 						p.setHasBeenMooved();
+						m.draw();//evite les drop d'image
 					}else if(p.getSector() == Sector.SECTOR_MARKET){
 						m.lunchMarket();
-						//p.setHasBeenMooved();
 					}
 				}else {
-					if(w.isPlayerWin())//si le joueur a deja gagner une fois, on regen le ship adverse
-						w.prepareForNewCombat();
 					m.processKey();
 					m.draw();
 				}

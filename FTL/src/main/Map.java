@@ -16,6 +16,8 @@ public class Map {
 	//public constante
 	public static final int NB_SECTOR = 10; // nb of sector in a row and a line.
 	
+	public static final int COINS_EARN_ON_DEPOSIT = 20;
+	
 	//////////////////////////////////////////////////////
 	//private constante
 	
@@ -46,7 +48,6 @@ public class Map {
 		for(int y = 0 ; y < this.map.length ; y++) {
 			for(int x = 0 ; x < this.map[y].length ; x++){
 				double rand = Math.random();
-				
 				if(rand < TAUX_VAISSEAU) {
 					this.map[y][x] = new Sector("ressources/images/ship.png", Sector.SECTOR_SHIP);
 				}else if(rand < TAUX_VAISSEAU + TAUX_MAGASIN) {
@@ -58,6 +59,9 @@ public class Map {
 		}
 		
 		this.player.setPosOnMap(new Vector2<Integer>(0, 0), this.map[0][0].getType());
+		//on le decouvre si c'est la premiere case pour l'afficher
+		this.map[0][0].setVisible(); 
+		//on decouvre celle autour
 		this.decouvre();
 		
 		this.bind = new BindingsMap(this);
@@ -84,10 +88,10 @@ public class Map {
 		}
 		Vector2<Integer> pos = this.player.getPosOnMap();
 		StdDraw.setPenColor(StdDraw.GREEN);
-		StdDraw.filledRectangle((1.0/NB_SECTOR) * pos.getX() + (1.0/NB_SECTOR)/2, 
+		StdDraw.filledRectangle(((1.0/NB_SECTOR) * pos.getX() + (1.0/NB_SECTOR)/2), 
 								(1.0/NB_SECTOR) * pos.getY() + (1.0/NB_SECTOR)/2, 
-								(1.0/NB_SECTOR)/2, 
-								(1.0/NB_SECTOR)/2);
+								(1.0/NB_SECTOR)/6, 
+								(1.0/NB_SECTOR)/6);
 		
 		if(this.drawPlayerHud) {
 			this.player.drawHud();

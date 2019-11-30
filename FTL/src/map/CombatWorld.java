@@ -28,6 +28,9 @@ public class CombatWorld {
 	public Ship player;				// The ship of the player
 	public Ship opponent;				// The ship of the opponent
 	
+	//constante
+	public static final double MULTIPLICATEUR_COINS = 0.5;//the multiplicater apply to the level for the money earn after the victory
+	
 	/**
 	 * Creates the world with the bindings, the player ship
 	 * and the opponent ship.
@@ -40,16 +43,6 @@ public class CombatWorld {
 		genNewOpponentShip();
 		time = System.currentTimeMillis();
 		this.moduleButton = new ArrayList<ModuleButton>();
-		this.amelioration = -1;
-		this.moduleToUpgrade = null;
-	}
-	
-	/**
-	 * prepare the world for another combat
-	 */
-	public void prepareForNewCombat() {
-		this.genNewOpponentShip();
-		this.player.clean();
 		this.amelioration = -1;
 		this.moduleToUpgrade = null;
 	}
@@ -73,13 +66,18 @@ public class CombatWorld {
 			this.amelioration = -1;
 			this.moduleToUpgrade.addLevel();
 			this.moduleToUpgrade = null;
-			return true;
-		}else{
+			
 			//on clean les bouttons
 			for(ModuleButton button : this.moduleButton) {
 				button.destroy();
 			}
 			this.moduleButton.clear();
+			
+			this.genNewOpponentShip();
+			this.player.clean();
+			
+			return true;
+		}else{
 			//on avance le monde	
 			player.step(((double) (System.currentTimeMillis()-time))/1000);
 			opponent.step(((double) (System.currentTimeMillis()-time))/1000);
@@ -144,8 +142,8 @@ public class CombatWorld {
 	}
 	
 	/**
-	 * if the opponent is dead and the player haven't choose his reward
-	 * @return if the opponent is dead and the player haven't choose his reward
+	 * if the opponent is dead
+	 * @return if the opponent is dead
 	 */
 	public boolean isPlayerWin() {
 		return this.opponent.getCurentHull() <= 0 ;
@@ -204,7 +202,7 @@ public class CombatWorld {
 		if(this.amelioration == -1) {
 			this.amelioration = (int) Math.round( (0 + Math.random() * 3));
 		}
-		String amelio_string = "Upgrade aleatoire : ";
+		String amelio_string = "";
 		switch(this.amelioration) {
 			case 0:
 				amelio_string += "Une arme !";
@@ -221,7 +219,9 @@ public class CombatWorld {
 				break;
 		}
 		
-		StdDraw.textLeft(0.25, 0.65, amelio_string);
+		StdDraw.textLeft(0.25, 0.65, "Coins gagnés : " + ((int)(this.level*MULTIPLICATEUR_COINS)));
+		StdDraw.textLeft(0.25, 0.60, "Upgrade aleatoire : ");
+		StdDraw.text(0.5, 0.55, amelio_string);
 		
 		//module choice
 		Module[] modules = this.player.getModule();
@@ -264,6 +264,19 @@ public class CombatWorld {
 		StdDraw.filledRectangle(0.5, 0.5, 0.23, 0.23);
 	}
 	
+	//////////////////////////////////////////////////////////////
+	/**
+	 * get the coin earn by the player if he kill the opponent ship
+	 * @return the coin earn by the player if he kill the opponent ship
+	 */
+	public int getCoinsEarn() {
+		return (int) (this.level * MULTIPLICATEUR_COINS);
+	}
+	
+	
+	
+	//////////////////////////////////////////////////////////////
+	
 	/**
 	 * A WeaponButton is an implementation of a Button
 	 * which activates/deactivates the linked weapon when
@@ -280,7 +293,7 @@ public class CombatWorld {
 
 		@Override
 		protected void onLeftClick() {
-			if(this.module.getCurrentLevel() != this.module.getMaxLevel()) {
+			if(this.module.getCurrentLevel() < this.module.getMaxLevel()) {
 				moduleToUpgrade = this.module;
 			}
 		}

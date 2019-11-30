@@ -66,10 +66,10 @@ public class MarketSector extends Sector {
 	 * lunche and step the market
 	 */
 	public void lunch() {
-		//construct the buttons
-		if(this.valide)
+		if(this.valide && this.canBeSell())//on verifie qu'on peux vendre
 			this.validate();
 		else {
+			this.valide = false;
 			this.genBoutton();
 			this.drawWorld();
 		}
@@ -86,14 +86,24 @@ public class MarketSector extends Sector {
 		
 		StdDraw.text(0.5, 0.90, "MARKET !");
 		
+		boolean canBeSell = this.canBeSell();
+		
+		if(!canBeSell) {//si le joueur ne peux pas acheter les marchandise sélectionnées
+			StdDraw.setPenColor(StdDraw.ORANGE);
+			StdDraw.text(0.5, 0.5, "Attention ! Vous n'avez pas assez de coin.");
+		}
+		
 		//StdDraw.setFont();
 		//draw the buttons
 		for(int i = 0 ; i < this.choose.length ; i++) {
 			this.bouttons[i].draw();
+			
 			if(this.choose[i])
 				StdDraw.setPenColor(StdDraw.GREEN);
 			else
 				StdDraw.setPenColor(StdDraw.RED);
+			
+			
 			StdDraw.rectangle(getHalfPosButon(i).getX(), 
 							  getHalfPosButon(i).getY(), 
 							  HALFDIMBUTON.getX(), 
@@ -118,7 +128,10 @@ public class MarketSector extends Sector {
 			StdDraw.text(getHalfPosButon(i).getX(), getHalfPosButon(i).getY() + HALFDIMBUTON.getY() + 0.025,
 					textPrix);
 		}
-		StdDraw.setPenColor(StdDraw.GREEN);
+		if(!canBeSell)
+			StdDraw.setPenColor(StdDraw.ORANGE);
+		else
+			StdDraw.setPenColor(StdDraw.GREEN);
 		StdDraw.filledRectangle(0.1, 0.1, 0.05, 0.05);
 		StdDraw.setPenColor(StdDraw.BLACK);
 		StdDraw.text(0.1, 0.1, "valider !");
@@ -154,6 +167,27 @@ public class MarketSector extends Sector {
 		}
 		this.player.setHasBeenMooved();
 	}
+	
+	/**
+	 * if the player can buy the selected thing
+	 * @return if the player can buy the selected thing
+	 */
+	private boolean canBeSell() {
+		int cost = 0;
+		for(int i = 0 ; i < this.choose.length ; i++) {
+			if(this.choose[i]) {
+				if(i<this.toSell.size()) {
+					Vendable v = ((LinkedList<Vendable>)this.toSell).get(i);
+					cost += v.getPrice();
+				}else {
+					cost += COST_REPA;
+				}
+			}
+		}
+		
+		return cost <= this.player.getCoins();
+	}
+	
 	
 	///////////////////////////////////////////////////////////////////////////
 	//gen of the think
