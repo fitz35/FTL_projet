@@ -36,7 +36,6 @@ public class Start {
 				
 				if(p.isHasBeenMooved() && !m.isDecouvert(p.getPosOnMap().getX(), p.getPosOnMap().getY())) {
 					if(p.getSector() == Sector.SECTOR_SHIP) {
-						// Processes the key pressed during the last frame
 						w.processKey();
 						if(w.step()) {//si on a finis la manche
 							p.setHasBeenMooved();

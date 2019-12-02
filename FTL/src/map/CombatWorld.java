@@ -78,16 +78,18 @@ public class CombatWorld {
 			
 			return true;
 		}else{
-			//on avance le monde	
-			player.step(((double) (System.currentTimeMillis()-time))/1000);
-			opponent.step(((double) (System.currentTimeMillis()-time))/1000);
-				
-			opponent.ai(player);
-				
-			processHit(player.getProjectiles(), true);
-			processHit(opponent.getProjectiles(), false);
-				
-			time = System.currentTimeMillis();
+			//on avance le monde si on n'a pas finis
+			if(!this.isPlayerDead() && !this.isPlayerWin()) {
+				player.step(((double) (System.currentTimeMillis()-time))/1000);
+				opponent.step(((double) (System.currentTimeMillis()-time))/1000);
+					
+				opponent.ai(player);
+					
+				processHit(player.getProjectiles(), true);
+				processHit(opponent.getProjectiles(), false);
+					
+				time = System.currentTimeMillis();
+			}
 			return false;
 		}
 	}

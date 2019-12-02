@@ -52,7 +52,7 @@ public class Map {
 					this.map[y][x] = new Sector("ressources/images/ship.png", Sector.SECTOR_SHIP);
 				}else if(rand < TAUX_VAISSEAU + TAUX_MAGASIN) {
 					this.map[y][x] = new MarketSector(this.player);
-				}else {
+				}else if(rand <= TAUX_VAISSEAU + TAUX_MAGASIN + TAUX_DEPOSIT){
 					this.map[y][x] = new Sector("ressources/images/ressource.png", Sector.SECTOR_RESSOURCE);
 				}
 			}
