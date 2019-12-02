@@ -8,7 +8,8 @@ import ship.Tile;
  * This tile has a HUD to display its current energy level.
  */
 public abstract class Module extends Tile {
-	private static final double     TEMPS_REPARE = 2.0; //temps de la réparation en seconde 
+	private static final double     TEMPS_REPARE = 2.0; //temps de la rï¿½paration en seconde 
+	private static final double     TEMPS_DESACTIVE = 4.0;  //temps de la desactivation en seconde
 
 	protected	String				name;				// Name of the module
 	protected	int 				maxLevel;			// Maximum level of the module
@@ -16,8 +17,11 @@ public abstract class Module extends Tile {
 	protected 	int 				allocatedEnergy;	// Amount of energy allocated to the module
 	protected 	int					amountDamage;		// Amount of damage done to the module
 	protected   double				timeElapsed;        // time elapsed during the last repare
+	protected   double				timeDesactive;      // time elapsed during the last desactivation
 	protected  	boolean 			canBeManned; 		// Can a crew member man this module
 	protected 	Vector2<Double> 	hudPos;				// HUD position of the module
+	protected 	boolean 			desactive;          // Desactivation is true if desactive is at true
+	
 	
 	/**
 	 * Construct a module owned by the player or the opponent.
@@ -68,7 +72,6 @@ public abstract class Module extends Tile {
 		}else {
 			this.timeElapsed = 0;
 		}
-		
 		//on repare si jamais
 		if(this.timeElapsed >= Module.TEMPS_REPARE) {
 			this.amountDamage --;
@@ -126,6 +129,7 @@ public abstract class Module extends Tile {
 	public int		getAllocatedEnergy()	{ return allocatedEnergy;	}
 	public int		getAmountDamage()		{ return amountDamage;		}
 	public boolean 	getCanBeManned() 		{ return canBeManned; 		}
+	public boolean 	isDesactive()			{ return desactive; 		}
 	
 	////////////
 	// setter //
@@ -145,6 +149,33 @@ public abstract class Module extends Tile {
 	public void appliqueDmg(int dmg) {
 		if(this.amountDamage != -1) {//pas le reacteur
 			this.amountDamage += dmg;
+		}
+	}
+	
+	/**
+	 * Set desactive
+	 * @param desactive si le module est desactive
+	 */
+	public void setDesactive(boolean desactive) {
+		this.desactive = desactive;
+	}
+	
+	/**
+	 * process time of desactivation
+	 * @param elapsedTime temps depuis la derniere desactivation
+	 */
+	public void stepDesactive (double elapsedTime) {
+		//on avance le temps
+		if(this.desactive) {
+			this.timeDesactive += elapsedTime;
+		}else {
+			this.timeDesactive = 0;
+		}
+		
+		//on repare si jamais
+		if(this.timeDesactive >= Module.TEMPS_DESACTIVE) {
+			this.desactive = false;
+			this.timeDesactive = 0;
 		}
 	}
 	

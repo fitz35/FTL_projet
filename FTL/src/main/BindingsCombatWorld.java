@@ -111,6 +111,13 @@ public class BindingsCombatWorld {
 		else if(key.getKeyCode() == KeyEvent.VK_R)
 			w.player.activeWeapon(3);
 		
+		else if(key.getKeyCode() == KeyEvent.VK_T && key.isControlDown())
+			w.player.shotWeapon(4);
+		else if(key.getKeyCode() == KeyEvent.VK_T && key.isShiftDown())
+			w.player.deactiveWeapon(4);
+		else if(key.getKeyCode() == KeyEvent.VK_T)
+			w.player.activeWeapon(4);
+		
 		// Crew Management
 		else if(key.getKeyCode() == KeyEvent.VK_Q && key.isShiftDown())
 			w.player.unselectCrewMember();

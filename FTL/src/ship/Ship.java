@@ -6,8 +6,11 @@ import java.util.Iterator;
 import display.StdDraw;
 import display.Vector2;
 import module.Module;
+import module.Motor;
 import module.Reactor;
+import module.Shield;
 import module.WeaponControl;
+import weapon.Missile;
 import weapon.Projectile;
 import weapon.Weapon;
 
@@ -17,11 +20,15 @@ import weapon.Weapon;
  */
 public abstract class Ship {
 	
+	
 	protected Vector2<Double>			position;		// The position of the ship
 	protected int						totalHull;		// The total hull integrity of the ship
 	protected int						currentHull;	// The current hull integrity of the ship
 	
+
 	protected Reactor					reactor;		// The reactor of the ship
+	protected Motor						motor;			// The motor of the ship
+	protected Shield					shield;			// The shield of the shipmhip
 	protected WeaponControl				weaponControl;	// The weapon control system
 	
 	protected Collection<CrewMember> 	crew;			// The crew members in the ship
@@ -76,6 +83,9 @@ public abstract class Ship {
 		chargeWeapons(elapsedTime);
 		processProjectiles(elapsedTime);
 		this.repareModule(elapsedTime);
+		for(Module m : this.modules) {
+			m.stepDesactive(elapsedTime);
+		}
 	}
 	
 	/**
@@ -422,12 +432,24 @@ public abstract class Ship {
 	 */
 	public void applyDamage(Projectile p) {
 		Tile touche = this.getTileHit(p);
-		if(touche != null) {//si on n'est pas different de null on ne fait rien
-			this.currentHull -= p.getDamage();
-			if(touche instanceof Module) {//si on touche un module on applique l'effet
-				p.applyEffect((Module)touche);
-				((Module)touche).appliqueDmg(p.getDamage());
+		if (!motor.esquive()) {
+			if(touche != null) {//si on n'est pas different de null on ne fait rien
+				if (p instanceof Missile.MissileProjectile) {
+					this.currentHull= currentHull - p.getDamage();
+				}
+				else {
+					if (shield.cantProtect()) {
+						this.currentHull = currentHull - p.getDamage(); 	
+					}
+					else {
+						shield.reduceCharge();
+					}
+				}
+				if(touche instanceof Module) {
+					p.applyEffect((Module) touche);
+				}
 			}
+			
 		}
 	}
 	
