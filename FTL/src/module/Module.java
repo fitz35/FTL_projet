@@ -9,7 +9,8 @@ import ship.Tile;
  */
 public abstract class Module extends Tile {
 	private static final double     TEMPS_REPARE = 2.0; //temps de la r�paration en seconde 
-	private static final double     TEMPS_DESACTIVE = 4.0;  //temps de la desactivation en seconde
+	
+	protected   double              desactivationTime;  //temps de la desactivation en seconde
 
 	protected	String				name;				// Name of the module
 	protected	int 				maxLevel;			// Maximum level of the module
@@ -34,6 +35,7 @@ public abstract class Module extends Tile {
 	public Module(Vector2<Double> hudPos, Vector2<Double> tilePos, boolean isPlayer) {
 		super(tilePos, isPlayer);
 		this.hudPos = hudPos;
+		this.desactivationTime = 0.0;
 	}
 	
 	/**
@@ -155,9 +157,11 @@ public abstract class Module extends Tile {
 	/**
 	 * Set desactive
 	 * @param desactive si le module est desactive
+	 * @param time the time of desactivation
 	 */
-	public void setDesactive(boolean desactive) {
+	public void setDesactive(boolean desactive, double time) {
 		this.desactive = desactive;
+		this.desactivationTime = time;
 	}
 	
 	/**
@@ -173,7 +177,7 @@ public abstract class Module extends Tile {
 		}
 		
 		//on repare si jamais
-		if(this.timeDesactive >= Module.TEMPS_DESACTIVE) {
+		if(this.timeDesactive >= this.desactivationTime) {
 			this.desactive = false;
 			this.timeDesactive = 0;
 		}

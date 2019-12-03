@@ -7,9 +7,12 @@ import display.StdDraw;
 import display.Vector2;
 import main.BindingsCombatWorld;
 import module.Module;
+import module.Shield;
 import ship.CrewMember;
 import ship.DummyShip;
 import ship.Ship;
+import weapon.Ion;
+import weapon.Missile;
 import weapon.Projectile;
 
 /**
@@ -98,20 +101,34 @@ public class CombatWorld {
 	 * Processes the projectiles hit
 	 * @param projectiles collection of projectiles to check for hit
 	 * @param isPlayer whether the own of the projectiles is the player
+	 * 
+	 * @note shield v2
 	 */
 	private void processHit(Collection<Projectile> projectiles, boolean isPlayer) {
 		Collection<Projectile> toRemove = new ArrayList<Projectile>();
 		for(Projectile proj : projectiles) {
-			//on test pour chaque projectiles les tile du vaisseau
-			if(isPlayer) {
-				if(this.opponent.getTileHit(proj) != null) {
-					 this.opponent.applyDamage(proj);
-					 toRemove.add(proj);
+			//on test si il est capter par le shield
+			Shield shield = isPlayer ? this.opponent.getShield() : this.player.getShield();
+			
+			if (shield.isTouche(proj) && !(proj instanceof Missile.MissileProjectile) && !shield.cantProtect()) {
+				proj.applyEffect(shield);
+				if(!shield.isDesactive()) {//on verifie qu'il n'a pas ete désactiver par le projectile
+					shield.reduceCharge();
 				}
+				toRemove.add(proj);
+				
 			}else {
-				if(this.player.getTileHit(proj) != null) {
-					 this.player.applyDamage(proj);
-					 toRemove.add(proj);
+				//on test pour chaque projectiles les tile du vaisseau
+				if(isPlayer) {
+					if(this.opponent.getTileHit(proj) != null) {
+						 this.opponent.applyDamage(proj);
+						 toRemove.add(proj);
+					}
+				}else {
+					if(this.player.getTileHit(proj) != null) {
+						 this.player.applyDamage(proj);
+						 toRemove.add(proj);
+					}
 				}
 			}
 		}

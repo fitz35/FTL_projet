@@ -30,7 +30,11 @@ public class DummyShip extends Ship {
 		addTile(reactor);
 		this.motor = new Motor(new Vector2<Double>(0.65, 0.015), getNextTilePosition(),isPlayer, 1);
 		addTile(motor);
-		this.shield = new Shield(new Vector2<Double>(0.75, 0.015), getNextTilePosition(),isPlayer, 1);
+		
+		
+		
+		
+		this.shield = new Shield(new Vector2<Double>(0.75, 0.015), getNextTilePosition(), new Vector2<Double>(0.25, 0.25),isPlayer, 1);
 		addTile(shield);
 		
 		Tile mid = new Tile(getNextTilePosition(), isPlayer);
@@ -51,7 +55,7 @@ public class DummyShip extends Ship {
 		// Creates the gun of the ship
 		Weapon w = new DummyGun();
 		Weapon x = new Laser();
-		Weapon z = new Ion();
+		Weapon z = new Ion(weaponControl);
 		Weapon y = new Missile();
 		// Assigns the gun to the weapon control
 		weaponControl.addWeapon(w);

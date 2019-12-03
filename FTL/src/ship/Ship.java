@@ -10,7 +10,6 @@ import module.Motor;
 import module.Reactor;
 import module.Shield;
 import module.WeaponControl;
-import weapon.Missile;
 import weapon.Projectile;
 import weapon.Weapon;
 
@@ -412,10 +411,11 @@ public abstract class Ship {
 	 * @param elapsedTime the time elapsed since the last call
 	 */
 	private void processProjectiles(double elapsedTime) {
-		for (Projectile p : projectiles)
+		for (Projectile p : projectiles) {
 			if (p != null) {
 				p.step(elapsedTime);
 			}
+		}
 	}
 	
 	/**
@@ -429,8 +429,21 @@ public abstract class Ship {
 	/**
 	 * Applies the damage a projectile did.
 	 * @param p the projectile to process
+	 * @note shield v2
 	 */
 	public void applyDamage(Projectile p) {
+		Tile touche = this.getTileHit(p);
+		if (!motor.esquive()) {
+			if(touche != null) {//si on n'est pas different de null on ne fait rien
+				this.currentHull= currentHull - p.getDamage();
+				if(touche instanceof Module) {
+					p.applyEffect((Module) touche);
+				}
+			}
+		}
+	}
+	
+	/*public void applyDamage(Projectile p) {//shield v1
 		Tile touche = this.getTileHit(p);
 		if (!motor.esquive()) {
 			if(touche != null) {//si on n'est pas different de null on ne fait rien
@@ -451,7 +464,7 @@ public abstract class Ship {
 			}
 			
 		}
-	}
+	}*/
 	
 	// Aiming Methods
 	
@@ -565,5 +578,13 @@ public abstract class Ship {
 	 */
 	public void addNewWeapon(Weapon weapon) {
 		this.weaponControl.addWeapon(weapon);
+	}
+	
+	/**
+	 * get the shield of the ship
+	 * @return the shield of the ship
+	 */
+	public Shield getShield() {
+		return this.shield;
 	}
 }
