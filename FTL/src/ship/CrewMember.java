@@ -118,6 +118,6 @@ public class CrewMember implements Vendable{
 	@Override
 	public String getDisplayName() {
 		// TODO Auto-generated method stub
-		return "Un membre d'equipage ! " + this.getName();
+		return "Membre : '" + this.getName() + "' de type : " + this.getType();
 	}
 }

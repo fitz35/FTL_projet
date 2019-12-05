@@ -22,6 +22,9 @@ public class Missile extends Weapon {
 		
 	}
 	
+	/**
+	 * construct a missile
+	 */
 	public Missile() {
 		name = "Missile";
 		requiredPower = 4;
@@ -48,9 +51,19 @@ public class Missile extends Weapon {
 		}
 	}
 	
-	
+	/**
+	 * get the number of the missile
+	 * @return the number of missile
+	 */
 	public int getMissile() {
 		return charge;
+	}
+	
+	/**
+	 * add a charge to the missile launch
+	 */
+	public void addMissile() {
+		this.chargeTime ++;
 	}
 
 }

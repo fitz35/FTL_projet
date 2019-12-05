@@ -26,7 +26,7 @@ public class Motor extends Module{
 	 * @return si le ship esquive
 	 */
 	public boolean esquive () {
-		return Math.random()<0.05*allocatedEnergy;
+		return Math.random() < (0.05*allocatedEnergy) * (1 + 0.05 * this.getNbMemberBonus());
 	}
 
 }

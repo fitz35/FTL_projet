@@ -101,6 +101,14 @@ public abstract class Projectile {
 	}
 	
 	/**
+	 * add a bonus to the damage of the projectile
+	 * @param bonus the amount of bonus
+	 */
+	public void addBonus(double bonus) {
+		this.damage = (int) Math.round((double) this.damage * bonus); 
+	}
+	
+	/**
 	 * apply to the Module the effect of the projectile
 	 * @param tile the Module to apply
 	 */

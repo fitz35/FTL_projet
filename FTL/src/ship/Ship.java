@@ -596,10 +596,25 @@ public abstract class Ship {
 	}
 	
 	/**
+	 * add a missile to the missile weapon
+	 */
+	public void addMissile() {
+		this.weaponControl.addMissile();
+	}
+	
+	/**
 	 * get the shield of the ship
 	 * @return the shield of the ship
 	 */
 	public Shield getShield() {
 		return this.shield;
+	}
+	
+	/**
+	 * get the nb of missile
+	 * @return the nb of missile
+	 */
+	public int getNbMissile() {
+		return this.weaponControl.getNbMissile();
 	}
 }

@@ -36,7 +36,8 @@ public class Player {
 		StdDraw.filledRectangle(0.5, 1, 0.5, 0.05);
 		StdDraw.setPenColor(StdDraw.BLACK);
 		String text = "PV du vaisseau : " + this.ship.getCurentHull() + " sur " + this.ship.getTotalHull() +
-				     "    Coins : " + this.coins;
+				     "    Coins : " + this.coins +
+				     "    Missiles : " + this.ship.getNbMissile();
 		StdDraw.text(0.5, 0.975, text);
 	}
 	

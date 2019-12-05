@@ -59,12 +59,12 @@ public class Shield extends Module{
         if (getMaxNvCharge() != cptNvCharge && !this.isDesactive()) {
             
             if (getMaxNvCharge() == 1 +cptNvCharge  && allocatedEnergy%2 == 0) {
-                if ((System.currentTimeMillis() - this.timeDetruit)/1000 > TEMPS_DETRUIT_MIN) {
+                if ((System.currentTimeMillis() - this.timeDetruit)/1000 > TEMPS_DETRUIT_MIN * (1 - 0.05 * this.getNbMemberBonus())) {
                     cptNvCharge ++;
                 }
             }
             else {
-                if ((System.currentTimeMillis() - this.timeDetruit)/1000 > TEMPS_DETRUIT_MAX) {
+                if ((System.currentTimeMillis() - this.timeDetruit)/1000 > TEMPS_DETRUIT_MAX * (1 - 0.05 * this.getNbMemberBonus())) {
                     cptNvCharge ++;
                 }
             }

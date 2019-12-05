@@ -202,6 +202,7 @@ public class CombatWorld {
 				break;
 			case 3:
 				//"Un missile supplémentaire !";
+				ship.addMissile();
 				break;
 		}
 	}

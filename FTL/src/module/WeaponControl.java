@@ -3,6 +3,7 @@ import display.Button;
 import display.StdDraw;
 import display.Vector2;
 import ship.Tile;
+import weapon.Missile;
 import weapon.Projectile;
 import weapon.Weapon;
 
@@ -164,7 +165,12 @@ public class WeaponControl extends Module {
 				weaponBtns[i].draw();
 			StdDraw.rectangle(x+0.1+(0.09*i), y+0.1, 0.045, 0.035);
 			StdDraw.setPenColor(StdDraw.BLACK);
-			StdDraw.text(x+0.1+(0.09*i), y+0.1, w.getName());
+			if(w instanceof Missile) {
+				StdDraw.text(x+0.1+(0.09*i), y+0.11, w.getName());
+				StdDraw.text(x+0.1+(0.09*i), y+0.09, "(" + this.getNbMissile() + " missiles)");
+			}else {
+				StdDraw.text(x+0.1+(0.09*i), y+0.1, w.getName());
+			}
 		}
 	}
 	
@@ -180,8 +186,9 @@ public class WeaponControl extends Module {
 			return null;
 		Vector2<Double> v = tile.getPosition();
 		weapons[weapon].resetCharge();
-		
-		return weapons[weapon].shot(new Vector2<Double>(v.getX(), v.getY()), dir);
+		Projectile p = weapons[weapon].shot(new Vector2<Double>(v.getX(), v.getY()), dir);
+		p.addBonus(1 + 0.05 * this.getNbMemberBonus()); 
+		return p;
 	}
 	
 	/**
@@ -222,4 +229,33 @@ public class WeaponControl extends Module {
 			}
 		}
 	}
+	
+	/**
+	 * add a missile to the missile weapon
+	 */
+	public void addMissile() {
+		for(Weapon w : this.weapons) {
+			if(w instanceof Missile) {
+				((Missile) w ).addMissile();
+				return;
+			}
+				
+		}
+		return;
+	}
+	
+	/**
+	 * get the nb of missile 
+	 * @return the nb of missile 
+	 */
+	public int getNbMissile() {
+		for(Weapon w : this.weapons) {
+			if(w instanceof Missile) {
+				return ((Missile) w ).getMissile();
+			}
+				
+		}
+		return 0;
+	}
+	
 }
