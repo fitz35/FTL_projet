@@ -1,4 +1,5 @@
 package ship;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import display.StdDraw;
@@ -15,7 +16,7 @@ public class Tile {
 	public static final double WIDTH = 0.02;
 	
 	private 		Weapon 			weapon;		// The weapon assigned to the tile
-	private 		CrewMember 		member;		// The crew member on the tile
+	protected 		Collection<CrewMember> 		member;		// The crew member on the tile
 	private 		boolean 		isAimed;	// Whether the tile aimed at
 	private 		boolean 		isPlayer;	// Whether the tile is owned by the player
 	protected final Vector2<Double> tilePos;	// The position of the tile
@@ -29,6 +30,7 @@ public class Tile {
 	public Tile(Vector2<Double> position, boolean isPlayer) {
 		this.tilePos = position;
 		this.isPlayer = isPlayer;
+		this.member = new ArrayList<CrewMember>();
 	}
 	
 	/**
@@ -36,16 +38,62 @@ public class Tile {
 	 * @return whether the tile has a crew member
 	 */
 	public boolean hasCrewMember() {
-		return member != null;
+		return !member.isEmpty();
 	}
 	
 	/**
 	 * Sets the given crew member has inside the tile.
 	 * @param member the crew member to put inside the tile
 	 */
-	public void setCrewMember(CrewMember member) {
-		this.member = member;
+	public void addCrewMember(CrewMember member) {
+		this.member.add(member);
 	}
+	
+	/**
+	 * Sets the given crew member has inside the tile.
+	 * @param member the crew member to put inside the tile
+	 */
+	public void removeCrewMember(CrewMember member) {
+		this.member.remove(member);
+	}
+	
+	/**
+	 * Checks whether the given crew member is the on in the tile.
+	 * @param member the crew member to compare it to
+	 * @return whether the crew member is the one in the tile
+	 */
+	public boolean isCrewMember(CrewMember member) {
+		return this.member.contains(member);
+	}
+
+	/**
+	 * Removes the crew member of the tile.
+	 * @param i the index of the member to remve
+	 */
+	public void removeCrewMember(int i) {
+		((ArrayList<CrewMember>)member).remove(i);
+	}
+	
+	/**
+	 * get the member on the tile if he exist
+	 * @param i the index of the crew member
+	 * @return the member on the tile if he exist null instead
+	 */
+	public CrewMember getMember (int i) {
+		return ((ArrayList<CrewMember>) this.member).get(i);
+	}
+	
+	/**
+	 * get the number of the members on the tile
+	 * @return the number of the members on the tile
+	 */
+	public int getNbMember(){
+		return this.member.size();
+	}
+	
+	///////////////////////////////////////////////////////////////
+	//draw
+	///////////////////////////////////////////////////////////////
 	
 	/**
 	 * Draws the tile, the member inside and the weapon.
@@ -72,8 +120,17 @@ public class Tile {
 		drawHorizontalWall(x,y);
 		x-=0.02;
 		drawVerticalWall(x,y);
-		if(member != null)
-			member.draw(getCenterPosition());
+		if(member != null) {
+			int i = 1;
+			int nb = this.getNbMember();
+			for(CrewMember m : this.member) {
+				double x1 = this.tilePos.getX()  - (i * WIDTH/nb - WIDTH/(2*nb));
+				double y1 = this.getCenterPosition().getY();
+				m.draw(new Vector2<Double>(x1, y1), nb);
+				i++;
+			}
+			
+		}
 		StdDraw.setPenColor(StdDraw.BLACK);
 	}
 	
@@ -192,30 +249,6 @@ public class Tile {
 	 */
 	public void unmarkTarget() {
 		isAimed = false;
-	}
-	
-	/**
-	 * Checks whether the given crew member is the on in the tile.
-	 * @param member the crew member to compare it to
-	 * @return whether the crew member is the one in the tile
-	 */
-	public boolean isCrewMember(CrewMember member) {
-		return this.member == member;
-	}
-
-	/**
-	 * Removes the crew member of the tile.
-	 */
-	public void removeCrewMember() {
-		member = null;
-	}
-	
-	/**
-	 * get the member on the tile if he exist
-	 * @return the member on the tile if he exist null instead
-	 */
-	public CrewMember getMember () {
-		return this.member;
 	}
 	
 	//////////////////////////

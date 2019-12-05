@@ -1,6 +1,7 @@
 package module;
 import display.StdDraw;
 import display.Vector2;
+import ship.CrewMember;
 import ship.Tile;
 
 /**
@@ -8,7 +9,8 @@ import ship.Tile;
  * This tile has a HUD to display its current energy level.
  */
 public abstract class Module extends Tile {
-	private static final double     TEMPS_REPARE = 2.0; //temps de la r�paration en seconde 
+	private static final double     TEMPS_REPARE = 2.0; //temps de la reparation en seconde
+	protected static final double     BASE_BONUS   = 0.05;//base bonus from a member on the module 
 	
 	protected   double              desactivationTime;  //temps de la desactivation en seconde
 
@@ -68,16 +70,19 @@ public abstract class Module extends Tile {
 	 * @param elapsedTime the time elapsed
 	 */
 	public void repare (double elapsedTime) {
-		//on avance le temps
-		if(this.amountDamage > 0) {
-			this.timeElapsed += elapsedTime;
-		}else {
-			this.timeElapsed = 0;
-		}
-		//on repare si jamais
-		if(this.timeElapsed >= Module.TEMPS_REPARE) {
-			this.amountDamage --;
-			this.timeElapsed = 0;
+		double nb = this.getNbMemberBonus();
+		if(nb != 0) {
+			//on avance le temps
+			if(this.amountDamage > 0) {
+				this.timeElapsed += elapsedTime;
+			}else {
+				this.timeElapsed = 0;
+			}
+			//on repare si jamais
+			if(this.timeElapsed >= Module.TEMPS_REPARE/nb) {
+				this.amountDamage --;
+				this.timeElapsed = 0;
+			}
 		}
 	}
 	
@@ -183,4 +188,21 @@ public abstract class Module extends Tile {
 		}
 	}
 	
+	/**
+	 * get the number of member on the tile with ponderation
+	 * @return the number of member on the tile with ponderation
+	 */
+	protected double getNbMemberBonus () {
+		double retour = 0.0;
+		for(CrewMember m : this.member) {
+			if(m.getType() == CrewMember.TYPE_NONE)
+				retour += 1.0;
+			else if(m.getType().compareTo(this.getName()) == 0)
+				retour += 2.0;
+			else
+				retour += 0.5;
+		}
+		
+		return retour;
+	}
 }

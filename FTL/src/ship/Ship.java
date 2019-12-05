@@ -1,7 +1,6 @@
 package ship;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 import display.StdDraw;
 import display.Vector2;
@@ -175,7 +174,7 @@ public abstract class Ship {
 		}
 		selectedMember.unselect();
 		selectedMember = null;
-		//on deselectionne la case
+		//on deselectionne la case de target
 		if(this.isPlayer)
 			this.crewTile.unmarkTarget();
 	}
@@ -186,22 +185,19 @@ public abstract class Ship {
 	 * @return if a member was selected
 	 */
 	public boolean selectMember(int i) {
-		int j = 0;
-		//on selectionne (ou reselectionne) la case
-		if(this.crewTile == null)
-			this.crewTile = this.getFirstTile();
-		
-		if(this.isPlayer)
-			this.crewTile.markTarget();
-		
-		for (CrewMember m : crew) {
-			if (j++ == i) {
-				selectedMember = m;
-				selectedMember.select();
-				return true;
+		if(this.crew.size() <= i) {
+			return false;
+		}else {
+			if(this.selectedMember != null)//on deselect le membre precedent si il existe
+				this.selectedMember.unselect();
+			this.selectedMember = ((ArrayList<CrewMember>)this.crew).get(i);
+			this.selectedMember.select();
+			if(this.crewTile == null) {
+				this.crewTile = this.getTileFromMember(this.selectedMember);
+				this.crewTile.markTarget();
 			}
+			return true;
 		}
-		return false;
 	}
 	
 	/**
@@ -209,42 +205,9 @@ public abstract class Ship {
 	 * @param member the crew member to add
 	 */
 	public void addCrewMember(CrewMember member) {
-		Tile t = getEmptyTile();
-		if (t == null) {
-			System.err.println("The ship is full ! Sorry " + member.getName() + "...");
-			return;
-		}
+		Tile t = this.getFirstTile();
 		crew.add(member);
-		t.setCrewMember(member);
-	}
-	
-	public void chooseTeleporteTileLeft() {
-		if(this.isCrewMemberSelected()) {
-			if (crewTile == null) {
-				crewTile = this.getFirstTile();
-				crewTile.markTarget();
-				return;
-			}else{
-				this.crewTile.unmarkTarget();
-				this.crewTile = Tile.getLeftTile(this.layout, this.crewTile);
-				this.crewTile.markTarget();
-				return;
-			}
-		}
-	}
-	public void chooseTeleporteTileRight() {
-		if(this.isCrewMemberSelected()) {
-			if (crewTile == null) {
-				crewTile = this.getFirstTile();
-				crewTile.markTarget();
-				return;
-			}else{
-				this.crewTile.unmarkTarget();
-				this.crewTile = Tile.getRightTile(this.layout, this.crewTile);
-				this.crewTile.markTarget();
-				return;
-			}
-		}
+		t.addCrewMember(member);
 	}
 	
 	/**
@@ -253,29 +216,35 @@ public abstract class Ship {
 	public void teleportCrewMember() {
 		//on ne peux avoir qu'un membre par tile, si deja occuper swap
 		if(this.isCrewMemberSelected() && this.crewTile != null) {
-			for(Tile tile : this.layout) {
-				if(tile.isCrewMember(this.selectedMember)) {
-					tile.setCrewMember(this.crewTile.getMember());
-					break;
-				}
+			Tile t = this.getTileFromMember(this.selectedMember);
+			if(t != null) {
+				t.removeCrewMember(this.selectedMember);
+				this.crewTile.addCrewMember(this.selectedMember);
 			}
-			this.crewTile.setCrewMember(this.selectedMember);
 		}
 	}
+	
+	/**
+	 * get the tile from a member
+	 * @param member the member
+	 * @return the tile of the member
+	 */
+	private Tile getTileFromMember(CrewMember member) {
+		for(Tile t : this.layout) {
+			if(t.isCrewMember(member))
+				return t;
+		}
+		return null;
+	}
+	
 	
 	/**
 	 * step the modules to be repared
 	 * @param time the elapsed time
 	 */
 	public void repareModule(double time) {
-		for(CrewMember member : this.crew) {
-			for(Tile tile : this.layout) {//on trouve la case sur lequel est le membre et teste si c'est un module
-				if(tile.isCrewMember(member) && tile instanceof Module) {
-					((Module) tile).repare(time);
-					break;
-				}
-			}
-		}
+		for(Module m : this.modules)
+			m.repare(time);
 	}
 	// Layout Methods
 	
@@ -285,20 +254,6 @@ public abstract class Ship {
 	 */
 	protected void addTile(Tile t) {
 		layout.add(t);
-	}
-	
-	/**
-	 * Gives an empty tile of the ship
-	 * @return a tile empty of crew member
-	 */
-	private Tile getEmptyTile() {
-		Iterator<Tile> it = layout.iterator();
-		while(it.hasNext()) {
-			Tile t = it.next();
-			if (!t.hasCrewMember())
-				return t;
-		}
-		return null;
 	}
 	
 	/**
@@ -469,20 +424,25 @@ public abstract class Ship {
 	// Aiming Methods
 	
 	/**
+	 * aim the crew tile left
+	 */
+	public void chooseTeleporteTileLeft() {
+		this.crewTile = aimLeft(this.layout, this.crewTile);
+	}
+	
+	/**
+	 * aim the crew tile right
+	 */
+	public void chooseTeleporteTileRight() {
+		this.crewTile = aimRight(this.layout, this.crewTile);
+	}
+	
+	/**
 	 * Aims the guns up.
 	 * @param opponent the ship to aim at
 	 */
 	public void aimUp(Ship opponent) {
-		if (target == null) {
-			target = opponent.getFirstTile();
-			target.markTarget();
-			return;
-		}else{
-			this.target.unmarkTarget();
-			this.target = Tile.getUpTile(opponent.layout, this.target);
-			this.target.markTarget();
-			return;
-		}
+		this.target = aimUp(opponent.layout, this.target);
 	}
 	
 	/**
@@ -490,16 +450,7 @@ public abstract class Ship {
 	 * @param opponent the ship to aim at
 	 */
 	public void aimDown(Ship opponent) {
-		if (target == null) {
-			target = opponent.getFirstTile();
-			target.markTarget();
-			return;
-		}else{
-			this.target.unmarkTarget();
-			this.target = Tile.getDownTile(opponent.layout, this.target);
-			this.target.markTarget();
-			return;
-		}
+		this.target = aimDown(opponent.layout, this.target);
 	}
 	
 	/**
@@ -507,17 +458,7 @@ public abstract class Ship {
 	 * @param opponent the ship to aim at
 	 */
 	public void aimRight(Ship opponent) {
-		if (target == null) {
-			target = opponent.getFirstTile();
-			target.markTarget();
-			return;
-		
-		}else{
-			this.target.unmarkTarget();
-			this.target = Tile.getRightTile(opponent.layout, this.target);
-			this.target.markTarget();
-			return;
-		}
+		this.target = aimRight(opponent.layout, this.target);
 	}
 	
 	/**
@@ -525,17 +466,91 @@ public abstract class Ship {
 	 * @param opponent the ship to aim at
 	 */
 	public void aimLeft(Ship opponent) {
-		if (target == null) {
-			target = opponent.getFirstTile();
-			target.markTarget();
-			return;
+		this.target = aimLeft(opponent.layout, this.target);
+	}
+	
+	
+	/**
+	 * Aims in the layout up from the tile
+	 * @param layout the layout
+	 * @param t the tile
+	 * @return the tile up if it exists
+	 * @note update t with the new information
+	 */
+	public static Tile aimUp(Collection<Tile> layout, Tile t) {
+		if (t == null) {
+			t = layout.iterator().next();
+			t.markTarget();
+			return t;
 		}else{
-			this.target.unmarkTarget();
-			this.target = Tile.getLeftTile(opponent.layout, this.target);
-			this.target.markTarget();
-			return;
+			t.unmarkTarget();
+			t = Tile.getUpTile(layout, t);
+			t.markTarget();
+			return t;
 		}
 	}
+	
+	/**
+	 * Aims in the layout down from the tile
+	 * @param layout the layout
+	 * @param t the tile
+	 * @return the tile down if it exists
+	 * @note update t with the new information
+	 */
+	public static Tile aimDown(Collection<Tile> layout, Tile t) {
+		if (t == null) {
+			t = layout.iterator().next();
+			t.markTarget();
+			return t;
+		}else{
+			t.unmarkTarget();
+			t = Tile.getDownTile(layout, t);
+			t.markTarget();
+			return t;
+		}
+	}
+	
+	/**
+	 * Aims in the layout left from the tile
+	 * @param layout the layout
+	 * @param t the tile
+	 * @return the tile left if it exists
+	 * @note update t with the new information
+	 */
+	public static Tile aimLeft(Collection<Tile> layout, Tile t) {
+		if (t == null) {
+			t = layout.iterator().next();
+			t.markTarget();
+			return t;
+		}else{
+			t.unmarkTarget();
+			t = Tile.getLeftTile(layout, t);
+			t.markTarget();
+			return t;
+		}
+	}
+	
+	/**
+	 * Aims in the layout right from the tile
+	 * @param layout the layout
+	 * @param t the tile
+	 * @return the tile right if it exists
+	 * @note update t with the new information
+	 */
+	public static Tile aimRight(Collection<Tile> layout, Tile t) {
+		if (t == null) {
+			t = layout.iterator().next();
+			t.markTarget();
+			return t;
+		}else{
+			t.unmarkTarget();
+			t = Tile.getRightTile(layout, t);
+			t.markTarget();
+			return t;
+		}
+	}
+	
+	
 	///////////////
 	//getter and setter//
 	/////////////////////

@@ -13,7 +13,7 @@ public class Motor extends Module{
 	public Motor(Vector2<Double> hudPos, Vector2<Double> tilePos, boolean isPlayer, int initialLevel) {
 		super(hudPos, tilePos, isPlayer);
 		// Indeed, this module cannot be destroyed and is 'really' placed in the ship
-		name = "motor";
+		name = "Motor";
 		maxLevel = 8;
 		currentLevel = initialLevel;
 		allocatedEnergy = 0;

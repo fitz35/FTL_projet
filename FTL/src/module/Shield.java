@@ -56,7 +56,7 @@ public class Shield extends Module{
     @Override
     public void stepDesactive (double elapsedTime) {
         super.stepDesactive(elapsedTime);
-        if (getMaxNvCharge() != cptNvCharge) {
+        if (getMaxNvCharge() != cptNvCharge && !this.isDesactive()) {
             
             if (getMaxNvCharge() == 1 +cptNvCharge  && allocatedEnergy%2 == 0) {
                 if ((System.currentTimeMillis() - this.timeDetruit)/1000 > TEMPS_DETRUIT_MIN) {
