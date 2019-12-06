@@ -194,15 +194,23 @@ public abstract class Module extends Tile {
 	 */
 	protected double getNbMemberBonus () {
 		double retour = 0.0;
-		for(CrewMember m : this.member) {
-			if(m.getType() == CrewMember.TYPE_NONE)
-				retour += 1.0;
-			else if(m.getType().compareTo(this.getName()) == 0)
-				retour += 2.0;
-			else
-				retour += 0.5;
+		if(this.getName() != null) {//on ne s'occupe pas du reacteur
+			for(CrewMember m : this.member) {
+				if(m.getType() == CrewMember.TYPE_NONE)
+					retour += 1.0;
+				else if(m.getType().compareTo(this.getName()) == 0)
+					retour += 2.0;
+				else
+					retour += 0.5;
+			}
 		}
-		
 		return retour;
 	}
+	
+	@Override
+	public String toString() {
+		return "Module :\n" + this.name + "  energie : " + this.allocatedEnergy + " max energie : " + 
+					this.currentLevel + "\n" + super.toString() + "\n";
+	}
+
 }

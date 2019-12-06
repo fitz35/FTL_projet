@@ -1,5 +1,7 @@
 package weapon;
 
+import java.util.Collection;
+
 import display.Vector2;
 import map.Vendable;
 
@@ -26,7 +28,7 @@ public abstract class Weapon implements Vendable{
 	 * @param dir direction of the projectile
 	 * @return the created projectile
 	 */
-	public abstract Projectile shot(Vector2<Double> pos, Vector2<Double> dir);
+	public abstract Collection<Projectile> shot(Vector2<Double> pos, Vector2<Double> dir);
 
 	/**
 	 * Activates the weapon.

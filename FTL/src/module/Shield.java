@@ -77,7 +77,7 @@ public class Shield extends Module{
     public boolean removeEnergy() {
         boolean retour = super.removeEnergy();
         
-        if (this.cptNvCharge > getMaxNvCharge()) {
+        if (retour && this.cptNvCharge > getMaxNvCharge()) {
             this.cptNvCharge = getMaxNvCharge();
         }
         
@@ -88,7 +88,7 @@ public class Shield extends Module{
     public boolean addEnergy() {
     	boolean retour = super.addEnergy();
     	
-    	 if (this.cptNvCharge < getMaxNvCharge()) {
+    	 if (retour && this.cptNvCharge < getMaxNvCharge()) {
              this.timeDetruit = System.currentTimeMillis();
          }
     	

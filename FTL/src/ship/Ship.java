@@ -175,8 +175,9 @@ public abstract class Ship {
 		selectedMember.unselect();
 		selectedMember = null;
 		//on deselectionne la case de target
-		if(this.isPlayer)
+		if(this.isPlayer) 
 			this.crewTile.unmarkTarget();
+		//this.crewTile = null;
 	}
 
 	/**
@@ -194,8 +195,8 @@ public abstract class Ship {
 			this.selectedMember.select();
 			if(this.crewTile == null) {
 				this.crewTile = this.getTileFromMember(this.selectedMember);
-				this.crewTile.markTarget();
 			}
+			this.crewTile.markTarget();
 			return true;
 		}
 	}
@@ -243,8 +244,9 @@ public abstract class Ship {
 	 * @param time the elapsed time
 	 */
 	public void repareModule(double time) {
-		for(Module m : this.modules)
+		for(Module m : this.modules) {
 			m.repare(time);
+		}
 	}
 	// Layout Methods
 	
@@ -337,10 +339,12 @@ public abstract class Ship {
 	public void shotWeapon(int weapon) {
 		double xSpeed = 1;
 		double ySpeed = 1;
-		Projectile p = weaponControl.shotWeapon(weapon, getWeaponTile(weaponControl.getWeapon(weapon)), new Vector2<Double>(xSpeed, ySpeed));
-		if (p != null && this.target != null) {
-			p.computeDirection(this.target.getCenterPosition());
-			projectiles.add(p);
+		Collection<Projectile> ps = weaponControl.shotWeapon(weapon, getWeaponTile(weaponControl.getWeapon(weapon)), new Vector2<Double>(xSpeed, ySpeed));
+		if (ps != null && !ps.isEmpty() && this.target != null) {
+			for(Projectile p : ps) {
+				p.computeDirection(this.target.getCenterPosition());
+				projectiles.add(p);
+			}
 		}else if(this.target == null) {
 			System.err.println("Pas de cible !");
 		}

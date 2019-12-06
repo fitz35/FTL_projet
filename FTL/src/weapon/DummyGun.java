@@ -1,5 +1,8 @@
 package weapon;
 
+import java.util.Collection;
+import java.util.LinkedList;
+
 import display.StdDraw;
 import display.Vector2;
 
@@ -41,9 +44,10 @@ public class DummyGun extends Weapon {
 	 * @see weapon.Weapon#shot(display.Vector2, display.Vector2)
 	 */
 	@Override
-	public Projectile shot(Vector2<Double> pos, Vector2<Double> dir) {
-		
-		return new DummyGunProjectile(pos, dir);
+	public Collection<Projectile> shot(Vector2<Double> pos, Vector2<Double> dir) {
+		Collection<Projectile> p = new LinkedList<Projectile>();
+		p.add(new DummyGunProjectile(pos, dir));
+		return p;
 	}
 
 }

@@ -1,5 +1,8 @@
 package weapon;
 
+import java.util.Collection;
+import java.util.LinkedList;
+
 import display.StdDraw;
 import display.Vector2;
 
@@ -32,8 +35,10 @@ public class Laser extends Weapon {
 	
 	
 	@Override
-	public Projectile shot(Vector2<Double> pos, Vector2<Double> dir) {
-		return new LaserProjectile(pos, dir);
+	public Collection<Projectile> shot(Vector2<Double> pos, Vector2<Double> dir) {
+		Collection<Projectile> p = new LinkedList<Projectile>();
+		p.add(new LaserProjectile(pos, dir));
+		return p;
 	}
 
 }

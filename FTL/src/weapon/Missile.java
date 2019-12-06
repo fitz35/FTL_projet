@@ -1,5 +1,8 @@
 package weapon;
 
+import java.util.Collection;
+import java.util.LinkedList;
+
 import display.StdDraw;
 import display.Vector2;
 
@@ -40,10 +43,12 @@ public class Missile extends Weapon {
 
 	
 	@Override
-	public Projectile shot(Vector2<Double> pos, Vector2<Double> dir) {
+	public Collection<Projectile> shot(Vector2<Double> pos, Vector2<Double> dir) {
 		if (charge > 0) { 
 			charge--;
-			return new MissileProjectile(pos, dir);
+			Collection<Projectile> p = new LinkedList<Projectile>();
+			p.add(new MissileProjectile(pos, dir));
+			return p;
 			
 		}
 		else {

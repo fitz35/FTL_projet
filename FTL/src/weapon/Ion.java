@@ -1,5 +1,8 @@
 package weapon;
 
+import java.util.Collection;
+import java.util.LinkedList;
+
 import display.StdDraw;
 import display.Vector2;
 import module.Module;
@@ -55,8 +58,10 @@ public class Ion extends Weapon {
 	
 	
 	@Override
-	public Projectile shot(Vector2<Double> pos, Vector2<Double> dir) {
-		return new IonProjectile(pos, dir, arsenal.getAllocatedEnergy());
+	public Collection<Projectile> shot(Vector2<Double> pos, Vector2<Double> dir) {
+		Collection<Projectile> p = new LinkedList<Projectile>();
+		p.add(new IonProjectile(pos, dir, arsenal.getAllocatedEnergy()));
+		return p;
 	}
 
 }

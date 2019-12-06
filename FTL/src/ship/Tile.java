@@ -383,4 +383,9 @@ public class Tile {
 	private static int getVerticalDistanceTile(Tile tile1, Tile tile2) {
 		return (int) (Math.round(Math.abs(tile1.getCenterPosition().getY() - tile2.getCenterPosition().getY())/Tile.HEIGHT));
 	}
+	@Override
+	public String toString() {
+		return "Tile : player : " + this.isPlayer +". membres : " + this.member;
+	}
+	
 }

@@ -120,4 +120,8 @@ public class CrewMember implements Vendable{
 		// TODO Auto-generated method stub
 		return "Membre : '" + this.getName() + "' de type : " + this.getType();
 	}
+	@Override
+	public String toString() {
+		return this.getDisplayName();
+	}
 }

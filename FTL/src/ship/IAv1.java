@@ -2,12 +2,9 @@ package ship;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import module.Module;
-import module.Reactor;
 
 public class IAv1 extends IA {
 
@@ -43,10 +40,10 @@ public class IAv1 extends IA {
 			while (this.opponent.addEnergy(1)) {
 			}
 			//puis dans le bouclier
-			while (this.opponent.addEnergy(2)) {
+			while (this.opponent.addEnergy(3)) {
 			}
 			//puis dans le moteur
-			while (this.opponent.addEnergy(3)) {
+			while (this.opponent.addEnergy(2)) {
 			}
 		}
 	}
