@@ -2,9 +2,12 @@ package ship;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import module.Module;
+import module.Reactor;
 
 public class IAv1 extends IA {
 
@@ -36,8 +39,14 @@ public class IAv1 extends IA {
 	private void stepModule(long elapsedTime) {
 		removeEnergie();
 		if (this.agressivity > 6) {
-//on met toute l'energie dans les weapon
+			//on met toute l'energie dans les weapon
 			while (this.opponent.addEnergy(1)) {
+			}
+			//puis dans le bouclier
+			while (this.opponent.addEnergy(2)) {
+			}
+			//puis dans le moteur
+			while (this.opponent.addEnergy(3)) {
 			}
 		}
 	}
@@ -59,6 +68,7 @@ public class IAv1 extends IA {
 	 * @param long elapsedTime the time beetween the last call TODO
 	 */
 	private void stepCrewMember(long elapsedTime) {
+		//on se focus sur les modules endomager
 		ArrayList<Module> endomagedModule = (ArrayList<Module>) getEndomagedModule(this.opponent);
 		
 		Iterator<Module> it = endomagedModule.iterator();
@@ -90,6 +100,8 @@ public class IAv1 extends IA {
 	private void removeEnergie() {
 
 	}
+	
+	
 //stepMember
 	/**
 	 * get the damaged module from a ship
