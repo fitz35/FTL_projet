@@ -26,21 +26,21 @@ public class DummyShip extends Ship {
 		Tile front = new Tile(getNextTilePosition(), isPlayer);
 		addTile(front);
 		
-		this.reactor = new Reactor(new Vector2<Double>(0.025, 0.015), getNextTilePosition(),isPlayer, 8);
+		this.reactor = new Reactor(getNextTilePosition(),isPlayer, 8);
 		addTile(reactor);
-		this.motor = new Motor(new Vector2<Double>(0.15, 0.115), getNextTilePosition(),isPlayer, 1);
+		this.motor = new Motor(getNextTilePosition(),isPlayer, 1);
 		addTile(motor);
 		
 		
 		
 		
-		this.shield = new Shield(new Vector2<Double>(0.25, 0.115), getNextTilePosition(), new Vector2<Double>(0.25, 0.25),isPlayer, 1);
+		this.shield = new Shield(getNextTilePosition(), new Vector2<Double>(0.25, 0.25),isPlayer, 1);
 		addTile(shield);
 		
 		Tile mid = new Tile(getNextTilePosition(), isPlayer);
 		addTile(mid);
 		
-		weaponControl = new WeaponControl(new Vector2<Double>(0.08, 0.015), getNextTilePosition(), isPlayer, 1);
+		weaponControl = new WeaponControl(getNextTilePosition(), isPlayer, 1);
 		addTile(weaponControl);
 		
 		Tile back = new Tile(getNextTilePosition(), isPlayer);

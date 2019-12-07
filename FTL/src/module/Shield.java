@@ -13,14 +13,13 @@ public class Shield extends Module{
     protected Vector2<Double>       taille; //taille du bouclier
 
     /**
-     * @param hudPos position at which to draw the HUD
      * @param tilePos position at which to draw the tile
      * @param taille taille of the shield arround the ship
      * @param isPlayer whether it belongs to the player
      * @param initialLevel initial amount of energy which it can provide
      */
-    public Shield(Vector2<Double> hudPos, Vector2<Double> tilePos, Vector2<Double> taille, boolean isPlayer, int initialLevel) {
-        super(hudPos, tilePos, isPlayer);
+    public Shield(Vector2<Double> tilePos, Vector2<Double> taille, boolean isPlayer, int initialLevel) {
+        super(tilePos, isPlayer);
         // Indeed, this module cannot be destroyed and is 'really' placed in the ship
         name = "Shield";
         maxLevel = 8;

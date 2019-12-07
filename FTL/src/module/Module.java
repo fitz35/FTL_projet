@@ -22,7 +22,6 @@ public abstract class Module extends Tile {
 	protected   double				timeElapsed;        // time elapsed during the last repare
 	protected   double				timeDesactive;      // time elapsed during the last desactivation
 	protected  	boolean 			canBeManned; 		// Can a crew member man this module
-	protected 	Vector2<Double> 	hudPos;				// HUD position of the module
 	protected 	boolean 			desactive;          // Desactivation is true if desactive is at true
 	
 	
@@ -30,13 +29,11 @@ public abstract class Module extends Tile {
 	 * Construct a module owned by the player or the opponent.
 	 * The module's tile is drawn at the location given in tilePos.
 	 * The module's HUD is drawn at the location given in hudPos.
-	 * @param hudPos position at which to draw the HUD
 	 * @param tilePos position at which to draw the tile
 	 * @param isPlayer whether it belongs to the player
 	 */
-	public Module(Vector2<Double> hudPos, Vector2<Double> tilePos, boolean isPlayer) {
+	public Module(Vector2<Double> tilePos, boolean isPlayer) {
 		super(tilePos, isPlayer);
-		this.hudPos = hudPos;
 		this.desactivationTime = 0.0;
 	}
 	
@@ -100,10 +97,11 @@ public abstract class Module extends Tile {
 	
 	/**
 	 * Draw the module's HUD.
+	 * @param index the index of the module
 	 */
-	public void drawHud() {
-		double x = hudPos.getX();
-		double y = hudPos.getY();
+	public void drawHud(int index) {
+		double x = 0.02 + index * 0.08 ;
+		double y = this instanceof Reactor ? 0.005 : 0.115;
 		if (getName() != null)
 			StdDraw.text(x, y, getName());
 		int j = allocatedEnergy;

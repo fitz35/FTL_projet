@@ -128,12 +128,15 @@ public abstract class Ship {
 	 */
 	private void drawPlayerHUD() {
 		// Modules
-		for (Module m : modules)
-			m.drawHud();
+		int i = 0;
+		for (Module m : modules) {
+			m.drawHud(i);
+			i++;
+		}
 		// Hull
 		StdDraw.text(0.025, 0.97, "Hull");
 		int j = currentHull;
-		for (int i = 1; i <= totalHull; i++)
+		for (i = 1; i <= totalHull; i++)
 			if (j > 0) {
 				StdDraw.filledRectangle(0.05+(i*0.015), 0.97, 0.005, 0.015);
 				j--;

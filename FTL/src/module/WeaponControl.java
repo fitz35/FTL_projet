@@ -56,13 +56,12 @@ public class WeaponControl extends Module {
      * The initialLevel of the WeaponControl is the amount of energy it
      * can allocated when created.
      * The amountWeapons defines the size of the weapon inventory.
-     * @param hudPos position at which to draw the HUD
      * @param tilePos position at which to draw the tile
      * @param isPlayer whether it belongs to the player
      * @param initialLevel initial amount of energy which can be allocatedy
      */
-    public WeaponControl(Vector2<Double> hudPos, Vector2<Double> tilePos, boolean isPlayer, int initialLevel) {
-        super(hudPos, tilePos, isPlayer);
+    public WeaponControl(Vector2<Double> tilePos, boolean isPlayer, int initialLevel) {
+        super(tilePos, isPlayer);
         name = "Weapons";
         maxLevel = 8;
         currentLevel = initialLevel;
@@ -138,10 +137,10 @@ public class WeaponControl extends Module {
      * as their charging time.
      */
     @Override
-    public void drawHud() {
-    	super.drawHud();
-        double x = hudPos.getX();
-        double y = hudPos.getY();
+    public void drawHud(int index) {
+    	super.drawHud(index);
+        double x = 0.01;
+        double y = 0.02;
         double y_offset = 0.03;
         StdDraw.rectangle(x+0.05+(0.05*weapons.size()), y + y_offset, (0.05*weapons.size()), 0.04);
         for (int i = 0; i < weapons.size(); i++) {
