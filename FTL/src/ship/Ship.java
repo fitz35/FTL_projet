@@ -43,6 +43,9 @@ public abstract class Ship {
 	public static final int AMMOUNT_REPA_MIN = 5;//the amount max of the reparation
 	public static final int AMMOUNT_REPA_MAX = 8;//the amount max of the reparation
 	
+	//door
+	protected Collection<Porte>         portes;        //the doors in the ship
+	
 	/**
 	 * Creates a Ship for the player or the opponent at the provided position.
 	 * @param isPlayer whether the ship is for the player
@@ -55,6 +58,8 @@ public abstract class Ship {
 		projectiles = new ArrayList<Projectile>();
 		layout = new ArrayList<Tile>();
 		this.ia = null;
+		
+		this.portes = new ArrayList<Porte>();
 	}
 	
 	// Main Methods
@@ -84,6 +89,8 @@ public abstract class Ship {
 		for(Module m : this.modules) {
 			m.stepDesactive(elapsedTime);
 		}
+		for(Porte p : this.portes)
+			p.step(elapsedTime);
 	}
 	
 	/**
@@ -111,6 +118,8 @@ public abstract class Ship {
 	private void drawTiles() {
 		for (Tile t : layout)
 			t.draw();
+		for(Porte p : this.portes)
+			p.draw();
 	}
 
 	/**
@@ -129,6 +138,7 @@ public abstract class Ship {
 	private void drawPlayerHUD() {
 		// Modules
 		int i = 0;
+		StdDraw.setPenColor(StdDraw.BLACK);
 		for (Module m : modules) {
 			m.drawHud(i);
 			i++;
@@ -150,6 +160,7 @@ public abstract class Ship {
 	 */
 	private void drawOpponentHUD() {
 		int j = currentHull;
+		StdDraw.setPenColor(StdDraw.BLACK);
 		for (int i = 1; i <= totalHull; i++)
 			if (j > 0) {
 				StdDraw.filledRectangle(0.67+(i*0.0075), 0.75, 0.0025, 0.0075);
@@ -221,9 +232,15 @@ public abstract class Ship {
 		//on ne peux avoir qu'un membre par tile, si deja occuper swap
 		if(this.isCrewMemberSelected() && this.crewTile != null) {
 			Tile t = this.getTileFromMember(this.selectedMember);
-			if(t != null) {
-				t.removeCrewMember(this.selectedMember);
-				this.crewTile.addCrewMember(this.selectedMember);
+			Porte p = this.getPorteFromTile(t, this.crewTile);
+			
+			if(t != null && p != null) {
+				if(p.isOuvert()) {
+					t.removeCrewMember(this.selectedMember);
+					this.crewTile.addCrewMember(this.selectedMember);
+				}else {
+					System.err.println("Porte non ouverte !");
+				}
 			}
 		}
 	}
@@ -258,6 +275,15 @@ public abstract class Ship {
 	 * @param t the tile to add
 	 */
 	protected void addTile(Tile t) {
+		for(Tile tl : this.layout) {//si on a exactement une distance de 1 entre les deux tile
+			if((Tile.getVerticalDistanceTile(tl, t) == 1 && Tile.getHorizontalDistanceTile(tl, t) == 0) ||
+					(Tile.getVerticalDistanceTile(tl, t) == 0 && Tile.getHorizontalDistanceTile(tl, t) == 1)) {
+				Porte p = new Porte(t, tl, this.isPlayer);
+				this.portes.add(p);
+				
+			}
+		}
+		
 		layout.add(t);
 	}
 	
@@ -434,14 +460,16 @@ public abstract class Ship {
 	 * aim the crew tile left
 	 */
 	public void chooseTeleporteTileLeft() {
-		this.crewTile = aimLeft(this.layout, this.crewTile);
+		this.crewTile.unmarkTarget();
+		this.crewTile = aimLeft(this.layout, this.getTileFromMember(this.selectedMember));
 	}
 	
 	/**
 	 * aim the crew tile right
 	 */
 	public void chooseTeleporteTileRight() {
-		this.crewTile = aimRight(this.layout, this.crewTile);
+		this.crewTile.unmarkTarget();
+		this.crewTile = aimRight(this.layout, this.getTileFromMember(this.selectedMember));
 	}
 	
 	/**
@@ -624,4 +652,25 @@ public abstract class Ship {
 	public int getNbMissile() {
 		return this.weaponControl.getNbMissile();
 	}
+	
+	/**
+	 * get the porte from 2 tile
+	 * @param tile1 the first tile
+	 * @param tile2 the second tile
+	 * @return the porte
+	 */
+	private Porte getPorteFromTile(Tile tile1, Tile tile2) {
+		for(Porte p : this.portes) {
+			if((tile1 == p.getTile1() && tile2 == p.getTile2()) || (tile1 == p.getTile2() && tile1 == p.getTile2())) {
+				return p;
+			}
+		}
+		return null;
+	}
+	
+	
+	
+	////////////////////////////////////////////////////////////////////////////////////////
+	//class
+	
 }

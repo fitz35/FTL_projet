@@ -100,8 +100,9 @@ public abstract class Module extends Tile {
 	 * @param index the index of the module
 	 */
 	public void drawHud(int index) {
-		double x = 0.02 + index * 0.08 ;
+		double x = this instanceof Reactor ? 0.02 : 0.02 + 0.08 + (index - 1) * 0.08 ;
 		double y = this instanceof Reactor ? 0.005 : 0.115;
+		StdDraw.setPenColor(StdDraw.BLACK);
 		if (getName() != null)
 			StdDraw.text(x, y, getName());
 		int j = allocatedEnergy;

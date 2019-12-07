@@ -101,7 +101,7 @@ public class Tile {
 	public void draw() {
 		if (tilePos == null)
 			return;
-		
+		StdDraw.setPenColor(StdDraw.BLACK);
 		double x = tilePos.getX();
 		double y = tilePos.getY();
 		if (isAimed) {
@@ -140,6 +140,7 @@ public class Tile {
 	 * @param y Y start position
 	 */
 	private void drawHorizontalWall(double x, double y) {
+		StdDraw.setPenColor(StdDraw.BLACK);
 			StdDraw.line(x-0.005, y, x-0.015, y);
 			StdDraw.line(x, y, x-0.005, y);
 			StdDraw.line(x-0.015, y, x-0.02, y);
@@ -151,6 +152,7 @@ public class Tile {
 	 * @param y Y start position
 	 */
 	private void drawVerticalWall(double x, double y) {
+		StdDraw.setPenColor(StdDraw.BLACK);
 			StdDraw.line(x, y+0.005, x, y+0.015);
 			StdDraw.line(x, y, x, y+0.005);
 			StdDraw.line(x, y+0.015, x, y+0.02);
@@ -371,7 +373,7 @@ public class Tile {
 	 * @param tile2 the second tile
 	 * @return the horizontale distance beetween two tile in tile
 	 */
-	private static int getHorizontalDistanceTile(Tile tile1, Tile tile2) {
+	public static int getHorizontalDistanceTile(Tile tile1, Tile tile2) {
 		return (int) (Math.round(Math.abs(tile1.getCenterPosition().getX() - tile2.getCenterPosition().getX())/Tile.WIDTH));
 	}
 	/**
@@ -380,9 +382,10 @@ public class Tile {
 	 * @param tile2 the second tile
 	 * @return the Vertical distance beetween two tile in tile
 	 */
-	private static int getVerticalDistanceTile(Tile tile1, Tile tile2) {
+	public static int getVerticalDistanceTile(Tile tile1, Tile tile2) {
 		return (int) (Math.round(Math.abs(tile1.getCenterPosition().getY() - tile2.getCenterPosition().getY())/Tile.HEIGHT));
 	}
+	
 	@Override
 	public String toString() {
 		return "Tile : player : " + this.isPlayer +". membres : " + this.member;
