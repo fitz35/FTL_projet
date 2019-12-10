@@ -14,7 +14,7 @@ public class Missile extends Weapon {
 			super(0.01, 0.01);
 			this.x = pos.getX();
 			this.y = pos.getY();
-			this.cSpeed = 0.6;
+			this.cSpeed = 0.5;
 			this.xSpeed = dir.getX()*cSpeed;
 			this.ySpeed = dir.getY()*cSpeed;
 			this.color = StdDraw.GREEN;
@@ -38,7 +38,7 @@ public class Missile extends Weapon {
 	
 
 	
-	private static int charge = 3;
+	protected int charge = 3;
 	
 
 	
@@ -61,7 +61,7 @@ public class Missile extends Weapon {
 	 * @return the number of missile
 	 */
 	public int getMissile() {
-		return charge;
+		return this.charge;
 	}
 	
 	/**

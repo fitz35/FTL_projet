@@ -1,10 +1,18 @@
 package main;
 
+import java.util.ArrayList;
+
 import display.StdDraw;
 import display.Vector2;
 import map.CombatWorld;
 import map.Sector;
 import ship.DummyShip;
+import weapon.Death;
+import weapon.DummyGun;
+import weapon.Ion;
+import weapon.Laser;
+import weapon.Missile;
+import weapon.Weapon;
 
 /**
  * This class starts the game by creating the canvas
@@ -14,6 +22,20 @@ import ship.DummyShip;
 public class Start {
 	public static final int SCREEN_WIDTH = 1000;
 	public static final int SCREEN_HEIGHT = 650;
+	/**
+	 * return the weapon possible
+	 * @return the weapon possible
+	 */
+	public static ArrayList<Weapon> getWeaponPossible(){
+		ArrayList<Weapon> weaponPossible = new ArrayList<Weapon>();
+		weaponPossible.add(new Death());
+		weaponPossible.add(new DummyGun());
+		weaponPossible.add(new Ion(null));
+		weaponPossible.add(new Laser());
+		weaponPossible.add(new Missile());
+		return weaponPossible;
+	}
+	
 	
 	public static void main(String[] args) {
 		// Creates the canvas of the game
@@ -66,5 +88,15 @@ public class Start {
 		w.drawDefeatHud();
 		
 	}
-
+	
+	/**
+	 * get a random int beetween min and max incluse
+	 * @param min the min borne
+	 * @param max the max borne
+	 * @return random int beetween min and max incluse
+	 */
+	public static int getRandomInt(int min, int max) {
+		return (int) Math.round( (min + Math.random() * (max - min)));
+	}
+	
 }

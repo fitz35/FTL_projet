@@ -6,6 +6,7 @@ import java.util.Collection;
 import display.StdDraw;
 import map.CombatWorld;
 import weapon.DummyGun;
+import weapon.Missile;
 
 /**
  * The bindings class processes the key pressed by the player.
@@ -231,13 +232,14 @@ public class BindingsCombatWorld {
 			w.player.addNewWeapon(weapon);
 		}
 		
-		private class CheatWeapon extends DummyGun{
+		private class CheatWeapon extends Missile{
 			public CheatWeapon() {
 				name = "cheat";
 				requiredPower = 0;
 				chargeTime = 1;
 				shotDamage = Integer.MAX_VALUE;
 				shotPerCharge = 1;
+				this.charge = Integer.MAX_VALUE;
 			}
 		}
 		

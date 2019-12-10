@@ -6,12 +6,12 @@ import display.Button;
 import display.StdDraw;
 import display.Vector2;
 import main.BindingsCombatWorld;
+import main.Start;
 import module.Module;
 import module.Shield;
 import ship.CrewMember;
 import ship.DummyShip;
 import ship.Ship;
-import weapon.Ion;
 import weapon.Missile;
 import weapon.Projectile;
 
@@ -78,7 +78,6 @@ public class CombatWorld {
 			
 			this.genNewOpponentShip();
 			this.player.clean();
-			
 			return true;
 		}else{
 			//on avance le monde si on n'a pas finis
@@ -187,10 +186,11 @@ public class CombatWorld {
 	 * @param boolean isPlayer if the ship is a player
 	 */
 	private void upgrade(Ship ship, boolean isPlayer) {
-		int tmp = isPlayer ? this.amelioration : (int) Math.round(Math.random() * 3);
+		int tmp = isPlayer ? this.amelioration : Start.getRandomInt(ship.canGainNewWeapon() ? 0 : 1, 3);
 		switch(tmp) {
 			case 0:
 				//"Une arme !";
+				ship.addRandomWeapon();
 				break;
 			case 1:
 				//"Une réparation entre 1 et 5 de l’intégrité de la coque !";
@@ -220,7 +220,7 @@ public class CombatWorld {
 		
 		//amélioration
 		if(this.amelioration == -1) {
-			this.amelioration = (int) Math.round( (0 + Math.random() * 3));
+			this.amelioration = Start.getRandomInt(this.player.canGainNewWeapon() ? 0 : 1, 3);
 		}
 		String amelio_string = "";
 		switch(this.amelioration) {
@@ -313,7 +313,7 @@ public class CombatWorld {
 
 		@Override
 		protected void onLeftClick() {
-			if(this.module.getCurrentLevel() < this.module.getMaxLevel()) {
+			if(this.module.getCurrentLevel() < this.module.getMaxLevel() && moduleToUpgrade == null) {
 				moduleToUpgrade = this.module;
 			}
 		}

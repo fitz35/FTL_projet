@@ -54,14 +54,14 @@ public class DummyShip extends Ship {
 		
 		// Creates the gun of the ship
 		Weapon w = new DummyGun();
-		Weapon x = new Laser();
+		/*Weapon x = new Laser();
 		Weapon z = new Ion(weaponControl);
-		Weapon y = new Missile();
+		Weapon y = new Missile();*/
 		// Assigns the gun to the weapon control
 		weaponControl.addWeapon(w);
-		weaponControl.addWeapon(x);
+		/*weaponControl.addWeapon(x);
 		weaponControl.addWeapon(z);
-		weaponControl.addWeapon(y);
+		weaponControl.addWeapon(y);*/
 		
 		// Places the weapon at the front
 		front.setWeapon(w);

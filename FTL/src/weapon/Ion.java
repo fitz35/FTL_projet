@@ -56,6 +56,14 @@ public class Ion extends Weapon {
 		this.arsenal = arsenal;
 	}
 	
+	/**
+	 * set the arsenal
+	 * @param arsenal the arsenal to set
+	 */
+	public void setArsenal(WeaponControl arsenal) {
+		this.arsenal = arsenal;
+	}
+	
 	
 	@Override
 	public Collection<Projectile> shot(Vector2<Double> pos, Vector2<Double> dir) {

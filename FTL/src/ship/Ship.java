@@ -1,9 +1,11 @@
 package ship;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 
 import display.StdDraw;
 import display.Vector2;
+import main.Start;
 import module.Module;
 import module.Motor;
 import module.Reactor;
@@ -453,7 +455,6 @@ public abstract class Ship {
 			
 		}
 	}*/
-	
 	// Aiming Methods
 	
 	/**
@@ -585,7 +586,6 @@ public abstract class Ship {
 		}
 	}
 	
-	
 	///////////////
 	//getter and setter//
 	/////////////////////
@@ -610,8 +610,7 @@ public abstract class Ship {
 	 * repare the hull with an aleatoir value beetween AMMOUNT_REPA_MIN and AMMOUNT_REPA_MAX
 	 */
 	public void repareHull () {
-		this.currentHull = (int) Math.min((this.currentHull + AMMOUNT_REPA_MIN + 
-				Math.round(Math.random() * (AMMOUNT_REPA_MAX - AMMOUNT_REPA_MIN))), this.totalHull);
+		this.currentHull = (int) Math.min(this.currentHull + Start.getRandomInt(AMMOUNT_REPA_MIN, AMMOUNT_REPA_MAX), this.totalHull);
 	}
 	
 	/**
@@ -668,6 +667,23 @@ public abstract class Ship {
 		return null;
 	}
 	
+	
+
+	/**
+	 * return if the ship has not all the weapon
+	 * @return if the ship has not all the weapon
+	 */
+	public boolean canGainNewWeapon() {
+		return this.weaponControl.canGainNewWeapon();
+		
+	}
+	
+	/**
+	 * add a random weapon to the ship
+	 */
+	public void addRandomWeapon() {
+		this.weaponControl.addWeaponAleatoire();
+	}
 	
 	
 	////////////////////////////////////////////////////////////////////////////////////////

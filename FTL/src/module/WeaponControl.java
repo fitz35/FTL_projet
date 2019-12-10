@@ -1,11 +1,14 @@
 package module;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 
 import display.Button;
 import display.StdDraw;
 import display.Vector2;
+import main.Start;
 import ship.Tile;
+import weapon.Ion;
 import weapon.Missile;
 import weapon.Projectile;
 import weapon.Weapon;
@@ -119,6 +122,66 @@ public class WeaponControl extends Module {
     }
     
     /**
+     * return the size of the inventory of the weapons
+     * @return the size of the inventory of the weapons
+     */
+    public int getNbWeapon() {
+    	return this.weapons.size();
+    }
+    
+    /**
+	 * return if the WeaponControl has not all the weapon
+	 * @return if the WeaponControl has not all the weapon
+	 */
+    public boolean canGainNewWeapon() {
+    	ArrayList<Weapon> wPossible = Start.getWeaponPossible();
+		
+		for(Weapon w : wPossible) {
+			if(!this.hasWeapon(w)) {
+				return true;
+			}
+		}
+		
+		return false;
+    }
+    
+    /**
+     * return if the weaponcontrol contain a weapon of the same instance
+     * @param w the weapon to test
+     * @return if the weaponcontrol contain a weapon of the same instance
+     */
+    public boolean hasWeapon(Weapon w) {
+    	for(Weapon wPos : this.weapons){
+    		if(w.getName().compareTo(wPos.getName()) == 0) {
+    			return true;
+    		}
+    	}
+    	
+    	return false;
+    }
+    
+    /**
+     * add a random weapon no own
+     */
+    public void addWeaponAleatoire() {
+		LinkedList<Integer> indexWeaponPossible = new LinkedList<Integer>();
+		int i = 0;
+		ArrayList<Weapon> weaponPossible = Start.getWeaponPossible();
+		for(Weapon w : weaponPossible) {
+			if(!this.hasWeapon(w)) {
+				indexWeaponPossible.add(i);
+			}
+			i++;
+		}
+		int aleaInt = indexWeaponPossible.get(Start.getRandomInt(0, indexWeaponPossible.size() - 1));
+		
+		this.weapons.add(weaponPossible.get(aleaInt));
+		if(weaponPossible.get(aleaInt) instanceof Ion) {
+			((Ion) weaponPossible.get(aleaInt)).setArsenal(this);
+		}
+	}
+    
+    /**
      * Charges the weapon.
      * @param time the charging time to increase the weapon's charge by
      */
@@ -162,7 +225,9 @@ public class WeaponControl extends Module {
             StdDraw.setPenColor(StdDraw.BLACK);
             if(w instanceof Missile) {
                 StdDraw.text(x+0.1+(0.09*i), y + y_offset + 0.01, w.getName());
-                StdDraw.text(x+0.1+(0.09*i), y + y_offset - 0.01, "(" + this.getNbMissile() + " missiles)");
+                StdDraw.text(x+0.1+(0.09*i), y + y_offset - 0.01, "(" + 
+                		(((Missile)w).getMissile() == Integer.MAX_VALUE ? "infinis" : ((Missile)w).getMissile())
+                		+ " missiles)");
             }else {
                 StdDraw.text(x+0.1+(0.09*i), y + y_offset, w.getName());
             }
@@ -231,7 +296,7 @@ public class WeaponControl extends Module {
      */
     public void addMissile() {
         for(Weapon w : this.weapons) {
-            if(w instanceof Missile) {
+            if(w.getName().compareTo("Missile") == 0) {
                 ((Missile) w ).addMissile();
                 return;
             }
@@ -246,7 +311,7 @@ public class WeaponControl extends Module {
      */
     public int getNbMissile() {
         for(Weapon w : this.weapons) {
-            if(w instanceof Missile) {
+            if(w.getName().compareTo("Missile") == 0) {
                 return ((Missile) w ).getMissile();
             }
                 
