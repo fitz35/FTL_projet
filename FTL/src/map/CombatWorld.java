@@ -68,16 +68,18 @@ public class CombatWorld {
 			this.upgrade(this.player, true);
 			this.amelioration = -1;
 			this.moduleToUpgrade.addLevel();
-			this.moduleToUpgrade = null;
+			
 			
 			//on clean les bouttons
 			for(ModuleButton button : this.moduleButton) {
 				button.destroy();
 			}
+			
 			this.moduleButton.clear();
 			
 			this.genNewOpponentShip();
 			this.player.clean();
+			this.moduleToUpgrade = null; // apres la destruction des bouttons pour eviter les effets de bords (POURQUOI LES THREAD ?????)
 			return true;
 		}else{
 			//on avance le monde si on n'a pas finis

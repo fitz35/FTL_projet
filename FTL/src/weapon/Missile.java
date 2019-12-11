@@ -10,7 +10,7 @@ public class Missile extends Weapon {
 
 	public class MissileProjectile extends Projectile {
 
-		protected MissileProjectile(Vector2<Double> pos, Vector2<Double> dir) {
+		public MissileProjectile(Vector2<Double> pos, Vector2<Double> dir) {
 			super(0.01, 0.01);
 			this.x = pos.getX();
 			this.y = pos.getY();

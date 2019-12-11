@@ -2,11 +2,13 @@ package main;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 
 import display.StdDraw;
+import display.Vector2;
 import map.CombatWorld;
-import weapon.DummyGun;
 import weapon.Missile;
+import weapon.Projectile;
 
 /**
  * The bindings class processes the key pressed by the player.
@@ -239,8 +241,16 @@ public class BindingsCombatWorld {
 				chargeTime = 1;
 				shotDamage = Integer.MAX_VALUE;
 				shotPerCharge = 1;
-				this.charge = Integer.MAX_VALUE;
+				this.charge = -1;
 			}
+			
+			@Override
+			public Collection<Projectile> shot(Vector2<Double> pos, Vector2<Double> dir) {
+				Collection<Projectile> p = new LinkedList<Projectile>();
+				p.add(new MissileProjectile(pos, dir));
+				return p;
+			}
+			
 		}
 		
 	}

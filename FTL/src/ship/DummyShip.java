@@ -6,9 +6,9 @@ import module.Shield;
 import module.Motor;
 import module.WeaponControl;
 import weapon.DummyGun;
-import weapon.Ion;
-import weapon.Laser;
-import weapon.Missile;
+//import weapon.Ion;
+//import weapon.Laser;
+//import weapon.Missile;
 import weapon.Weapon;
 
 public class DummyShip extends Ship {

@@ -226,7 +226,7 @@ public class WeaponControl extends Module {
             if(w instanceof Missile) {
                 StdDraw.text(x+0.1+(0.09*i), y + y_offset + 0.01, w.getName());
                 StdDraw.text(x+0.1+(0.09*i), y + y_offset - 0.01, "(" + 
-                		(((Missile)w).getMissile() == Integer.MAX_VALUE ? "infinis" : ((Missile)w).getMissile())
+                		(((Missile)w).getMissile() == -1 ? "infinis" : ((Missile)w).getMissile())
                 		+ " missiles)");
             }else {
                 StdDraw.text(x+0.1+(0.09*i), y + y_offset, w.getName());
