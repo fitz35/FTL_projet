@@ -24,13 +24,15 @@ public class CombatWorld {
 	private long 		time;	// The current time 
 	
 	private int 		level;  // The curent level of the opponent ship (= the difficulty)
-	private Collection<ModuleButton> moduleButton ; // The button to display at the end of the round (upgrade module)
+	private Collection<Button> moduleButton ; // The button to display at the end of the round (upgrade module)
+	private Button SkipRecompenseButton;      // button to skip the recompense'
 	private int amelioration;   // The number of the amélioration to give to the player
 	private Module moduleToUpgrade; //the module to upgrade
 	
 	public Ship player;				// The ship of the player
 	public Ship opponent;				// The ship of the opponent
 	
+	private boolean skipRecompense;  
 	//constante
 	public static final double MULTIPLICATEUR_COINS = 0.5;//the multiplicater apply to the level for the money earn after the victory
 	
@@ -40,14 +42,17 @@ public class CombatWorld {
 	 * @param playerShip the player's ship
 	 */
 	public CombatWorld(Ship playerShip) {
-		this.level = 0;
-		bind = new BindingsCombatWorld(this);
+		this.level = 1;
 		player = playerShip;
 		genNewOpponentShip();
 		time = System.currentTimeMillis();
-		this.moduleButton = new ArrayList<ModuleButton>();
+		this.moduleButton = new ArrayList<Button>();
 		this.amelioration = -1;
 		this.moduleToUpgrade = null;
+		this.SkipRecompenseButton = null;
+		
+		bind = new BindingsCombatWorld(this);
+		this.skipRecompense = false;
 	}
 	
 	
@@ -64,21 +69,26 @@ public class CombatWorld {
 	 */
 	public boolean step() {
 		//on gere les upgrades du player et la regeneration du ship adverse
-		if(this.amelioration != -1 && this.moduleToUpgrade != null) {
+		if((this.amelioration != -1 && this.moduleToUpgrade != null) || this.skipRecompense) {
 			this.upgrade(this.player, true);
 			this.amelioration = -1;
-			this.moduleToUpgrade.addLevel();
+			if(!this.skipRecompense)
+				this.moduleToUpgrade.addLevel();
 			
 			
 			//on clean les bouttons
-			for(ModuleButton button : this.moduleButton) {
+			for(Button button : this.moduleButton) {
 				button.destroy();
 			}
+			this.SkipRecompenseButton.destroy();
+			this.SkipRecompenseButton = null;
 			
 			this.moduleButton.clear();
 			
 			this.genNewOpponentShip();
 			this.player.clean();
+			
+			this.skipRecompense = false;
 			this.moduleToUpgrade = null; // apres la destruction des bouttons pour eviter les effets de bords (POURQUOI LES THREAD ?????)
 			return true;
 		}else{
@@ -274,16 +284,27 @@ public class CombatWorld {
 				StdDraw.text(posX, posY, "Reactor");
 			}
 		}
+		
+		
+		//skip la recompense
+		Vector2<Double> posSkip = new Vector2<Double>(0.2, 0.2);
+		Vector2<Double> dimSkip = new Vector2<Double>(0.05, 0.05);
+		if(this.SkipRecompenseButton == null)
+			this.SkipRecompenseButton = new SkipButton(posSkip, dimSkip);
+		StdDraw.setPenColor(StdDraw.BLACK);
+		StdDraw.rectangle(posSkip.getX(), posSkip.getY(), dimSkip.getX(), dimSkip.getY());
+		StdDraw.text(posSkip.getX(), posSkip.getY(), "skip");
 	}
 	
 	/**
 	 * drawing the hud of defeat
 	 */
 	public void drawDefeatHud() {
+		StdDraw.setPenColor(StdDraw.WHITE);
+		StdDraw.filledRectangle(0.5, 0.5, 0.25, 0.25);
 		StdDraw.setPenColor(StdDraw.BLACK);
 		StdDraw.rectangle(0.5, 0.5, 0.25, 0.25);
-		StdDraw.setPenColor(StdDraw.WHITE);
-		StdDraw.filledRectangle(0.5, 0.5, 0.23, 0.23);
+		StdDraw.text(0.5, 0.5, "perdu !!!");
 	}
 	
 	//////////////////////////////////////////////////////////////
@@ -327,6 +348,33 @@ public class CombatWorld {
 
 		@Override
 		protected void onMiddleClick() {}
+		
+	}
+	
+	private class SkipButton extends Button{
+
+		public SkipButton(Vector2<Double> pos, Vector2<Double> dim) {
+			super(pos, dim);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		protected void onLeftClick() {
+			// TODO Auto-generated method stub
+			skipRecompense = true;
+		}
+
+		@Override
+		protected void onRightClick() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		protected void onMiddleClick() {
+			// TODO Auto-generated method stub
+			
+		}
 		
 	}
 	

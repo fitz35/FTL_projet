@@ -24,6 +24,7 @@ public abstract class Module extends Tile {
 	protected  	boolean 			canBeManned; 		// Can a crew member man this module
 	protected 	boolean 			desactive;          // Desactivation is true if desactive is at true
 	
+	protected   boolean             isSelected;         // If the module is selected by the player
 	
 	/**
 	 * Construct a module owned by the player or the opponent.
@@ -102,9 +103,14 @@ public abstract class Module extends Tile {
 	public void drawHud(int index) {
 		double x = this instanceof Reactor ? 0.02 : 0.02 + 0.08 + (index - 1) * 0.08 ;
 		double y = this instanceof Reactor ? 0.005 : 0.115;
-		StdDraw.setPenColor(StdDraw.BLACK);
+		if(this.isSelected)
+			StdDraw.setPenColor(StdDraw.GREEN);
+		else
+			StdDraw.setPenColor(StdDraw.BLACK);
 		if (getName() != null)
 			StdDraw.text(x, y, getName());
+		
+		StdDraw.setPenColor(StdDraw.BLACK);
 		int j = allocatedEnergy;
 		int k = currentLevel - amountDamage;
 		for (int i = 1; i <= currentLevel; i++)
@@ -135,6 +141,20 @@ public abstract class Module extends Tile {
 	public int		getAllocatedEnergy()	{ return allocatedEnergy;	}
 	public int		getAmountDamage()		{ return amountDamage;		}
 	public boolean 	getCanBeManned() 		{ return canBeManned; 		}
+	/**
+	 * @return the isSelected
+	 */
+	public boolean isSelected() {
+		return isSelected;
+	}
+
+	/**
+	 * @param isSelected the isSelected to set
+	 */
+	public void setSelected(boolean isSelected) {
+		this.isSelected = isSelected;
+	}
+
 	public boolean 	isDesactive()			{ return desactive; 		}
 	
 	////////////
@@ -142,10 +162,15 @@ public abstract class Module extends Tile {
 	////////////
 	/**
 	 * add 1 to the level of the module if it possible
+	 * @return if the level has been added
 	 */
-	public void addLevel() {
-		if(this.currentLevel < this.maxLevel)
+	public boolean addLevel() {
+		if(this.currentLevel < this.maxLevel) {
 			this.currentLevel = this.currentLevel + 1;
+			return true;
+		}else {
+			return false;
+		}
 	}
 	
 	/**

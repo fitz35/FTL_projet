@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import main.Start;
 import module.Module;
 
 public class IAv1 extends IA {
@@ -34,7 +35,6 @@ public class IAv1 extends IA {
 	 * @param long elapsedTime the time beetween the last call TODO
 	 */
 	private void stepModule(long elapsedTime) {
-		removeEnergie();
 		if (this.agressivity > 6) {
 			//on met toute l'energie dans les weapon
 			while (this.opponent.addEnergy(1)) {
@@ -54,9 +54,20 @@ public class IAv1 extends IA {
 	 * @param long elapsedTime the time beetween the last call TODO
 	 */
 	private void stepWeapon(long elapsedTime) {
-		this.opponent.activeWeapon(0);
+		if(this.opponent.weaponControl.canActiveWeapon()) {//active les weapon au hasard
+			ArrayList<Integer> iAlea = new ArrayList<Integer>();
+			for(int i = 0 ; i < this.opponent.getNbWeapon() ; i++) {
+				iAlea.add(i);
+			}
+			int i = Start.getRandomInt(0, iAlea.size() - 1);
+			while(!iAlea.isEmpty() && this.opponent.activeWeapon(iAlea.get(i))) {
+				iAlea.remove(i);
+				i = Start.getRandomInt(0, iAlea.size() - 1);
+			}
+		}
 		this.opponent.target = this.player.getFirstTile();
-		this.opponent.shotWeapon(0);
+		for(int i = 0 ; i < this.opponent.getNbWeapon() ; i++)//tire avec tous les weapon
+			this.opponent.shotWeapon(i);
 	}
 
 	/**
@@ -91,12 +102,6 @@ public class IAv1 extends IA {
 	}
 
 //stepModule
-	/**
-	 * remove all the energie from the module
-	 */
-	private void removeEnergie() {
-
-	}
 	
 	
 //stepMember
@@ -112,6 +117,22 @@ public class IAv1 extends IA {
 			if(module.getAmountDamage() > 0) {
 				retour.add(module);
 			}
+		}
+		
+		return retour;
+	}
+	
+	/**
+	 * get the member from the collections who has the type tye 
+	 * @param members the members to test
+	 * @param type the type search
+	 * @return he member from the collections who has the type tye 
+	 */
+	private static Collection<CrewMember> getMemberFromModule(ArrayList<CrewMember> members, String type) {
+		ArrayList<CrewMember> retour = new ArrayList<CrewMember>();
+		for(CrewMember m : members) {
+			if(m.getType().compareTo(type) == 0)
+				retour.add(m);
 		}
 		
 		return retour;

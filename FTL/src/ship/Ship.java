@@ -1,7 +1,6 @@
 package ship;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 
 import display.StdDraw;
 import display.Vector2;
@@ -145,6 +144,7 @@ public abstract class Ship {
 			m.drawHud(i);
 			i++;
 		}
+		StdDraw.setPenColor(StdDraw.BLACK);
 		// Hull
 		StdDraw.text(0.025, 0.97, "Hull");
 		int j = currentHull;
@@ -228,20 +228,24 @@ public abstract class Ship {
 	}
 	
 	/**
-	 * teleport the selected crew member on the selected tile if they existe and swap if the tile is occuped
+	 * teleport the selected crew member on the selected tile if they existe
 	 */
 	public void teleportCrewMember() {
-		//on ne peux avoir qu'un membre par tile, si deja occuper swap
 		if(this.isCrewMemberSelected() && this.crewTile != null) {
 			Tile t = this.getTileFromMember(this.selectedMember);
 			Porte p = this.getPorteFromTile(t, this.crewTile);
 			
-			if(t != null && p != null) {
-				if(p.isOuvert()) {
+			if(t != null) {
+				if(this.isPlayer) {//on différencie l'ia et le joueur
+					if(p != null && p.isOuvert()) {
+						t.removeCrewMember(this.selectedMember);
+						this.crewTile.addCrewMember(this.selectedMember);
+					}else {
+						System.err.println("Porte non ouverte !");
+					}
+				}else {
 					t.removeCrewMember(this.selectedMember);
 					this.crewTile.addCrewMember(this.selectedMember);
-				}else {
-					System.err.println("Porte non ouverte !");
 				}
 			}
 		}
@@ -258,6 +262,14 @@ public abstract class Ship {
 				return t;
 		}
 		return null;
+	}
+	
+	/**
+	 * get the size of crew
+	 * @return the size of crew
+	 */
+	public int getNbMember() {
+		return this.crew.size();
 	}
 	
 	
@@ -350,9 +362,10 @@ public abstract class Ship {
 	/**
 	 * Activates a weapon. 
 	 * @param weapon the weapon to activate
+	 * @return TODO
 	 */
-	public void activeWeapon(int weapon) {
-		weaponControl.activeWeapon(weapon);
+	public boolean activeWeapon(int weapon) {
+		return weaponControl.activeWeapon(weapon);
 	}
 	
 	/**
@@ -685,6 +698,29 @@ public abstract class Ship {
 		this.weaponControl.addWeaponAleatoire();
 	}
 	
+	/**
+	 * get the number of weapon
+	 * @return the number of weapon
+	 */
+	public int getNbWeapon () {
+		return this.weaponControl.getNbWeapon();
+	}
+	
+	/**
+	 * select the weapon the p^layer has, and highlight it
+	 * @param i the weapon to select
+	 */
+	public void setSelectedWeapon(int i) {
+		this.weaponControl.setSelectedWeapon(i);
+	}
+	
+	/**
+	 * get the weaponControle
+	 * @return get the weaponControle
+	 */
+	public WeaponControl getWeaponControl() {
+		return this.weaponControl;
+	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////
 	//class

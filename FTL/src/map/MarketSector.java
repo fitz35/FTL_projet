@@ -1,5 +1,6 @@
 package map;
 
+import java.util.ArrayList;
 //import java.awt.Font;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -8,9 +9,11 @@ import display.Button;
 import display.StdDraw;
 import display.Vector2;
 import main.Player;
+import main.Start;
 import ship.CrewMember;
 import ship.Ship;
 import weapon.DummyGun;
+import weapon.Ion;
 import weapon.Weapon;
 
 public class MarketSector extends Sector {
@@ -203,7 +206,12 @@ public class MarketSector extends Sector {
 	 * @return a new random crewmember
 	 */
 	private Weapon genWeapon() {
-		return new DummyGun();
+		ArrayList<Weapon> w = Start.getWeaponPossible();
+		int i = Start.getRandomInt(0, w.size() -1);
+		if(w.get(i) instanceof Ion)
+			((Ion)w.get(i)).setArsenal(this.player.getShip().getWeaponControl());
+		
+		return w.get(i);
 	}
 	
 	/////////////////////////////////////////////////////////////////////////

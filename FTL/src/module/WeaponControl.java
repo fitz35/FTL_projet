@@ -23,6 +23,9 @@ public class WeaponControl extends Module {
     private Collection<Weapon>                weapons;    // The weapon slots
     private Collection<WeaponButton>        weaponBtns;    // The button linked to the weapon slot
     
+    private int selectedWeapon;                            //the weapon the player has selected
+    
+    
     /**
      * A WeaponButton is an implementation of a Button
      * which activates/deactivates the linked weapon when
@@ -73,6 +76,8 @@ public class WeaponControl extends Module {
         canBeManned = true;
         weapons = new ArrayList<Weapon>();
         weaponBtns = new ArrayList<WeaponButton>();
+        
+        this.selectedWeapon = 0;
     }
     
     /**
@@ -205,6 +210,7 @@ public class WeaponControl extends Module {
         double x = 0.01;
         double y = 0.02;
         double y_offset = 0.03;
+        StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.rectangle(x+0.05+(0.05*weapons.size()), y + y_offset, (0.05*weapons.size()), 0.04);
         for (int i = 0; i < weapons.size(); i++) {
             Weapon w = ((ArrayList<Weapon>)weapons).get(i);
@@ -222,7 +228,10 @@ public class WeaponControl extends Module {
             else
                 ((ArrayList<WeaponButton>)weaponBtns).get(i).draw();
             StdDraw.rectangle(x+0.1+(0.09*i), y + y_offset, 0.045, 0.035);
-            StdDraw.setPenColor(StdDraw.BLACK);
+            if(i == this.selectedWeapon)
+            	StdDraw.setPenColor(StdDraw.GREEN);
+            else
+            	StdDraw.setPenColor(StdDraw.BLACK);
             if(w instanceof Missile) {
                 StdDraw.text(x+0.1+(0.09*i), y + y_offset + 0.01, w.getName());
                 StdDraw.text(x+0.1+(0.09*i), y + y_offset - 0.01, "(" + 
@@ -318,6 +327,33 @@ public class WeaponControl extends Module {
         }
         return 0;
     }
-    
+
+	/**
+	 * @return the selectedWeapon
+	 */
+	public int getSelectedWeapon() {
+		return selectedWeapon;
+	}
+
+	/**
+	 * @param selectedWeapon the selectedWeapon to set
+	 */
+	public void setSelectedWeapon(int selectedWeapon) {
+		if(this.weapons.size() > selectedWeapon && selectedWeapon>=0)
+			this.selectedWeapon = selectedWeapon;
+	}
+	
+	/**
+	 * return if the arsenal can active a weapon
+	 * @return if the arsenal can active a weapon
+	 */
+	public boolean canActiveWeapon() {
+		int energy = 0;
+        for (Weapon w : weapons)
+            if (w != null)
+                energy += w.isActivated() ? w.getRequiredPower() : 0;
+                
+        return allocatedEnergy-amountDamage > energy;
+	}
 }
 

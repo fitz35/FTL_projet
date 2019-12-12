@@ -86,7 +86,7 @@ public class Start {
 		}
 		
 		w.drawDefeatHud();
-		
+		StdDraw.show();
 	}
 	
 	/**

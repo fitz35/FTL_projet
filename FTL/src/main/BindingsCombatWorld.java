@@ -7,8 +7,13 @@ import java.util.LinkedList;
 import display.StdDraw;
 import display.Vector2;
 import map.CombatWorld;
+import module.Module;
+import weapon.Death;
+import weapon.Ion;
+import weapon.Laser;
 import weapon.Missile;
 import weapon.Projectile;
+import weapon.Weapon;
 
 /**
  * The bindings class processes the key pressed by the player.
@@ -17,7 +22,12 @@ public class BindingsCombatWorld {
 
 	private CombatWorld w;		// The world on which the actions act
 	private Collection<CodeCheat> cheatCode; //the cheatCode
-	 
+	
+	//selection des evenement
+	private int moduleSelect;
+	private int weaponSelect;
+	private int memberSelect;
+	
 	/**
 	 * Create the bindings
 	 * @param w the world
@@ -26,8 +36,28 @@ public class BindingsCombatWorld {
 		this.w=w;
 		
 		this.cheatCode = new ArrayList<CodeCheat> ();
-		int[] sequence = {KeyEvent.VK_V, KeyEvent.VK_B, KeyEvent.VK_N};
-		this.cheatCode.add(new CodeGetWeapon(sequence));
+		int[] sequence1 = {KeyEvent.VK_Y, KeyEvent.VK_Y, KeyEvent.VK_Y};
+		this.cheatCode.add(new CodeLevelUpModule(sequence1));
+		
+		
+		int[] sequence2 = {KeyEvent.VK_V, KeyEvent.VK_B, KeyEvent.VK_C};
+		this.cheatCode.add(new CodeAddWeapon(sequence2, new CheatWeapon()));
+		
+		int[] sequence3 = {KeyEvent.VK_V, KeyEvent.VK_B, KeyEvent.VK_D};
+		this.cheatCode.add(new CodeAddWeapon(sequence3, new Death()));
+		
+		int[] sequence4 = {KeyEvent.VK_V, KeyEvent.VK_B, KeyEvent.VK_I};
+		this.cheatCode.add(new CodeAddWeapon(sequence4, new Ion(w.player.getWeaponControl())));
+		
+		int[] sequence5 = {KeyEvent.VK_V, KeyEvent.VK_B, KeyEvent.VK_L};
+		this.cheatCode.add(new CodeAddWeapon(sequence5, new Laser()));
+		
+		int[] sequence6 = {KeyEvent.VK_V, KeyEvent.VK_B, KeyEvent.VK_M};
+		this.cheatCode.add(new CodeAddWeapon(sequence6, new Missile()));
+		
+		this.setModuleSelect(1);
+		this.setMemberSelect(0);
+		this.setWeaponSelect(0);
 	}
 	
 	/**
@@ -59,88 +89,35 @@ public class BindingsCombatWorld {
 			System.exit(0);
 		
 		// Module Energy Management
-		if(key.getKeyCode() == KeyEvent.VK_1 && key.isShiftDown())
-			w.player.removeEnergy(1);
-		else if(key.getKeyCode() == KeyEvent.VK_1)
-			w.player.addEnergy(1);
 		
-		else if(key.getKeyCode() == KeyEvent.VK_2 && key.isShiftDown())
-			w.player.removeEnergy(2);
+		if(key.getKeyCode() == KeyEvent.VK_1)
+			this.setModuleSelect(this.moduleSelect - 1);
 		else if(key.getKeyCode() == KeyEvent.VK_2)
-			w.player.addEnergy(2);
-		
+			this.setModuleSelect(this.moduleSelect + 1);
 		else if(key.getKeyCode() == KeyEvent.VK_3 && key.isShiftDown())
-			w.player.removeEnergy(3);
+			w.player.removeEnergy(this.moduleSelect);
 		else if(key.getKeyCode() == KeyEvent.VK_3)
-			w.player.addEnergy(3);
-		
-		else if(key.getKeyCode() == KeyEvent.VK_4 && key.isShiftDown())
-			w.player.removeEnergy(4);
-		else if(key.getKeyCode() == KeyEvent.VK_4)
-			w.player.addEnergy(4);
-		
-		else if(key.getKeyCode() == KeyEvent.VK_5 && key.isShiftDown())
-			w.player.removeEnergy(5);
-		else if(key.getKeyCode() == KeyEvent.VK_5)
-			w.player.addEnergy(5);
-		
+			w.player.addEnergy(this.moduleSelect);
 		
 		// Weapon Management
-		else if(key.getKeyCode() == KeyEvent.VK_A && key.isControlDown())
-			w.player.shotWeapon(0);
-		else if(key.getKeyCode() == KeyEvent.VK_A && key.isShiftDown())
-			w.player.deactiveWeapon(0);
+		
 		else if(key.getKeyCode() == KeyEvent.VK_A)
-			w.player.activeWeapon(0);
-		
-		else if(key.getKeyCode() == KeyEvent.VK_Z && key.isControlDown())
-			w.player.shotWeapon(1);
-		else if(key.getKeyCode() == KeyEvent.VK_Z && key.isShiftDown())
-			w.player.deactiveWeapon(1);
+			this.setWeaponSelect(this.weaponSelect - 1);
 		else if(key.getKeyCode() == KeyEvent.VK_Z)
-			w.player.activeWeapon(1);
-		
+			this.setWeaponSelect(this.weaponSelect + 1);
 		else if(key.getKeyCode() == KeyEvent.VK_E && key.isControlDown())
-			w.player.shotWeapon(2);
+			w.player.shotWeapon(this.weaponSelect);
 		else if(key.getKeyCode() == KeyEvent.VK_E && key.isShiftDown())
-			w.player.deactiveWeapon(2);
+			w.player.deactiveWeapon(this.weaponSelect);
 		else if(key.getKeyCode() == KeyEvent.VK_E)
-			w.player.activeWeapon(2);
-		
-		else if(key.getKeyCode() == KeyEvent.VK_R && key.isControlDown())
-			w.player.shotWeapon(3);
-		else if(key.getKeyCode() == KeyEvent.VK_R && key.isShiftDown())
-			w.player.deactiveWeapon(3);
-		else if(key.getKeyCode() == KeyEvent.VK_R)
-			w.player.activeWeapon(3);
-		
-		else if(key.getKeyCode() == KeyEvent.VK_T && key.isControlDown())
-			w.player.shotWeapon(4);
-		else if(key.getKeyCode() == KeyEvent.VK_T && key.isShiftDown())
-			w.player.deactiveWeapon(4);
-		else if(key.getKeyCode() == KeyEvent.VK_T)
-			w.player.activeWeapon(4);
+			w.player.activeWeapon(this.weaponSelect);
 		
 		// Crew Management
-		else if(key.getKeyCode() == KeyEvent.VK_Q && key.isShiftDown())
-			w.player.unselectCrewMember();
+		
 		else if(key.getKeyCode() == KeyEvent.VK_Q)
-			w.player.selectMember(0);
-		
-		else if(key.getKeyCode() == KeyEvent.VK_S && key.isShiftDown())
-			w.player.unselectCrewMember();
+			this.setMemberSelect(this.memberSelect - 1);
 		else if(key.getKeyCode() == KeyEvent.VK_S)
-			w.player.selectMember(1);
-		
-		else if(key.getKeyCode() == KeyEvent.VK_D && key.isShiftDown())
-			w.player.unselectCrewMember();
-		else if(key.getKeyCode() == KeyEvent.VK_D)
-			w.player.selectMember(2);
-		
-		else if(key.getKeyCode() == KeyEvent.VK_F && key.isShiftDown())
-			w.player.unselectCrewMember();
-		else if(key.getKeyCode() == KeyEvent.VK_F)
-			w.player.selectMember(3);
+			this.setMemberSelect(this.memberSelect + 1);
 		
 		else if(key.getKeyCode() == KeyEvent.VK_W)
 			w.player.chooseTeleporteTileLeft();
@@ -180,8 +157,52 @@ public class BindingsCombatWorld {
 				break;
 		}
 	}
+
+	/**
+	 * @param moduleSelect the moduleSelect to set
+	 */
+	private void setModuleSelect(int moduleSelect) {
+		w.player.getModule()[this.moduleSelect].setSelected(false);
+		this.moduleSelect = moduleSelect;
+		if(this.moduleSelect < 1)
+			this.moduleSelect = 1;
+		else if(this.moduleSelect > w.player.getModule().length - 1)
+			this.moduleSelect = w.player.getModule().length - 1;
+		w.player.getModule()[this.moduleSelect].setSelected(true);
+	}
+
+	/**
+	 * @param weaponSelect the weaponSelect to set
+	 */
+	private void setWeaponSelect(int weaponSelect) {
+		this.weaponSelect = weaponSelect;
+		if(this.weaponSelect < 0)
+			this.weaponSelect = 0;
+		else if(this.weaponSelect > w.player.getNbWeapon() - 1)
+			this.weaponSelect = w.player.getNbWeapon() - 1;
+		
+		w.player.setSelectedWeapon(this.weaponSelect);
+	}
+
+	/**
+	 * @param memberSelect the memberSelect to set
+	 */
+	private void setMemberSelect(int memberSelect) {
+		w.player.unselectCrewMember();
+		this.memberSelect = memberSelect;
+		if(this.memberSelect < 0)
+			this.memberSelect = 0;
+		else if(this.memberSelect > w.player.getNbMember() - 1)
+			this.weaponSelect = w.player.getNbMember() - 1;
+		w.player.selectMember(this.memberSelect);
+	}
+
 	
+	/////////////////////////////////////////////////////////////////////////////
 	//cheat code
+	/////////////////////////////////////////////////////////////////////////////
+	
+	
 	/**
 	 * Class representant un code cheat
 	 * @author clementL
@@ -219,10 +240,38 @@ public class BindingsCombatWorld {
 		protected abstract void toDo();
 	}
 	
+	/**
+	 * weapon one shot
+	 * @author clementL
+	 *
+	 */
+	private class CheatWeapon extends Missile{
+		public CheatWeapon() {
+			name = "cheat";
+			requiredPower = 0;
+			chargeTime = 1;
+			shotDamage = Integer.MAX_VALUE;
+			shotPerCharge = 1;
+			this.charge = -1;
+		}
+		
+		@Override
+		public Collection<Projectile> shot(Vector2<Double> pos, Vector2<Double> dir) {
+			Collection<Projectile> p = new LinkedList<Projectile>();
+			p.add(new MissileProjectile(pos, dir));
+			return p;
+		}
+		
+	}
 	
-	private class CodeGetWeapon extends CodeCheat{
+	/**
+	 * level up all the module
+	 * @author clementL
+	 *
+	 */
+	private class CodeLevelUpModule extends CodeCheat{
 
-		protected CodeGetWeapon(int[] sequence) {
+		protected CodeLevelUpModule(int[] sequence) {
 			super(sequence);
 			// TODO Auto-generated constructor stub
 		}
@@ -230,27 +279,31 @@ public class BindingsCombatWorld {
 		@Override
 		protected void toDo() {
 			// TODO Auto-generated method stub
-			CheatWeapon weapon = new CheatWeapon();
-			w.player.addNewWeapon(weapon);
+			Module[] modules = w.player.getModule();
+			for(Module m : modules) {
+				while(m.addLevel()) {}
+			}
 		}
+	}
+	
+	/**
+	 * add a weapon to the inventory of the player
+	 * @author clementL
+	 *
+	 */
+	private class CodeAddWeapon extends CodeCheat{
+		private Weapon weapon;
 		
-		private class CheatWeapon extends Missile{
-			public CheatWeapon() {
-				name = "cheat";
-				requiredPower = 0;
-				chargeTime = 1;
-				shotDamage = Integer.MAX_VALUE;
-				shotPerCharge = 1;
-				this.charge = -1;
-			}
-			
-			@Override
-			public Collection<Projectile> shot(Vector2<Double> pos, Vector2<Double> dir) {
-				Collection<Projectile> p = new LinkedList<Projectile>();
-				p.add(new MissileProjectile(pos, dir));
-				return p;
-			}
-			
+		protected CodeAddWeapon(int[] sequence, Weapon w) {
+			super(sequence);
+			// TODO Auto-generated constructor stub
+			this.weapon = w;
+		}
+
+		@Override
+		protected void toDo() {
+			// TODO Auto-generated method stub
+			w.player.addNewWeapon(weapon);
 		}
 		
 	}
