@@ -193,7 +193,7 @@ public class BindingsCombatWorld {
 		if(this.memberSelect < 0)
 			this.memberSelect = 0;
 		else if(this.memberSelect > w.player.getNbMember() - 1)
-			this.weaponSelect = w.player.getNbMember() - 1;
+			this.memberSelect = w.player.getNbMember() - 1;
 		w.player.selectMember(this.memberSelect);
 	}
 
