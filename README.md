@@ -60,7 +60,13 @@ Les codes cheats sont activées en appuyant sur les touches précisée les unes 
 
 #### cheat
 
-### autre
+### autres commandes
+## autre
+### récompenses de fin de combat
+A chaque fois que le joueur sort victorieux d'un combat il obtient aléatoirement soit une réparation, une arme ou un membre d'équipage. 
+De plus, Le joueur peux choisir un module a ameliorer. En contrepartit, le vaisseau enemie obtient un level de plus, donc la fois suivante, il sera plus fort.
+### IA
+L'IA implémenté est une ia naive qui attaque aléatoirement les cases avec des armes aléatoires.
 ## crédits
 Ceci est un projet dans le cadre du module PO1 en deuxième année de license informatique à l'université de Rennes 1. Réalisé par Clément Lahoche et Léo Thuillier.
 
