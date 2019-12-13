@@ -38,8 +38,8 @@ Les codes cheats sont activées en appuyant sur les touches précisée les unes 
 #### gestion des membres d'équipages
 - W, X : respectivement selectionner le membre de droite ou de gauche (sous-ligner en vert)
 - D : bouton d'action (selectionner ou déselectionner) 
-- W, X : selectionner la case de drgauche ou droite (respectivement) d- u membre selectionne
-- C : teleporte le membre selectionne sur la case selectionnee si possible
+- X, V, F, C : selectionner la case de gauche, droite, haut ou bas (respectivement) du membre selectionne
+- G : teleporte le membre selectionne sur la case selectionnee si possible
 #### cheat
 - Y, Y, Y : upgrade tout les modules posséder par le joueur au niveau max.
 
@@ -54,13 +54,15 @@ Les codes cheats sont activées en appuyant sur les touches précisée les unes 
 - fleches directionnelles : déplacement du joueur sur la carte
 - F1 : afficher/masquer les stats du joueurs
 #### cheat
-
+- M, M, M : Ajoute 5000 coins à l'inventaire du joueur.
+- A, L, V : Ajoute 5 level au vaisseau enemi
 ### market
 
 #### cheat
 
 ### autre
-
+## crédits
+Ceci est un projet dans le cadre du module PO1 en deuxième année de license informatique à l'université de Rennes 1. Réalisé par Clément Lahoche et Léo Thuillier.
 
 
  
