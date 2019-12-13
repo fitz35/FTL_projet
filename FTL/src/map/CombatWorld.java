@@ -316,7 +316,13 @@ public class CombatWorld {
 		return (int) (this.level * MULTIPLICATEUR_COINS);
 	}
 	
-	
+	/**
+	 * add the specified level to the opponent
+	 * @param lv the level to add
+	 */
+	public void addLevel(int lv) {
+		this.level += lv;
+	}
 	
 	//////////////////////////////////////////////////////////////
 	

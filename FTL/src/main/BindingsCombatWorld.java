@@ -119,11 +119,15 @@ public class BindingsCombatWorld {
 		else if(key.getKeyCode() == KeyEvent.VK_S)
 			this.setMemberSelect(this.memberSelect + 1);
 		
-		else if(key.getKeyCode() == KeyEvent.VK_W)
-			w.player.chooseTeleporteTileLeft();
 		else if(key.getKeyCode() == KeyEvent.VK_X)
+			w.player.chooseTeleporteTileLeft();
+		else if(key.getKeyCode() == KeyEvent.VK_V)
 			w.player.chooseTeleporteTileRight();
+		else if(key.getKeyCode() == KeyEvent.VK_F)
+			w.player.chooseTeleporteTileUp();
 		else if(key.getKeyCode() == KeyEvent.VK_C)
+			w.player.chooseTeleporteTileDown();
+		else if(key.getKeyCode() == KeyEvent.VK_G)
 			w.player.teleportCrewMember();
 		
 		// Aiming System
@@ -201,45 +205,6 @@ public class BindingsCombatWorld {
 	/////////////////////////////////////////////////////////////////////////////
 	//cheat code
 	/////////////////////////////////////////////////////////////////////////////
-	
-	
-	/**
-	 * Class representant un code cheat
-	 * @author clementL
-	 *
-	 */
-	public abstract class CodeCheat{
-		
-		protected int[] sequence;
-		protected int i;
-		
-		protected CodeCheat (int[] sequence) {
-			this.sequence = sequence;
-			this.i = 0;
-		}
-		
-		/**
-		 * load a new key
-		 * @param key the key to load
-		 */
-		protected final void newKey(int key) {
-			if(key == this.sequence[this.i]) {
-				this.i ++ ;
-				if(this.i >= this.sequence.length) {
-					this.toDo();
-					this.i = 0;
-				}
-			}else {
-				this.i = 0;
-			}
-		}
-		
-		/**
-		 * the action to do if the code cheat is actif
-		 */
-		protected abstract void toDo();
-	}
-	
 	/**
 	 * weapon one shot
 	 * @author clementL

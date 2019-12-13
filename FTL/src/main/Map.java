@@ -2,6 +2,7 @@ package main;
 
 import display.StdDraw;
 import display.Vector2;
+import map.CombatWorld;
 import map.MarketSector;
 import map.Sector;
 
@@ -40,7 +41,7 @@ public class Map {
 	 * construct a map
 	 * @param player the player who play
 	 */
-	public Map(Player player) {
+	public Map(Player player, CombatWorld cbtWorld) {
 		this.map = new Sector[NB_SECTOR][NB_SECTOR];
 		this.player = player;
 		
@@ -64,7 +65,7 @@ public class Map {
 		//on decouvre celle autour
 		this.decouvre();
 		
-		this.bind = new BindingsMap(this);
+		this.bind = new BindingsMap(this, cbtWorld);
 		this.drawPlayerHud = false;
 	}
 	
@@ -208,5 +209,13 @@ public class Map {
 	 */
 	public void setDrawPlayerHud() {
 		this.drawPlayerHud = !this.drawPlayerHud;
+	}
+	
+	/**
+	 * return the player 
+	 * @return the player
+	 */
+	public Player getPlayer() {
+		return this.player;
 	}
 }

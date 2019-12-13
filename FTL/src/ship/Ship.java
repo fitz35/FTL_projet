@@ -212,7 +212,8 @@ public abstract class Ship {
 			if(this.crewTile == null) {
 				this.crewTile = this.getTileFromMember(this.selectedMember);
 			}
-			this.crewTile.markTarget();
+			if(this.isPlayer)
+				this.crewTile.markTarget();
 			return true;
 		}
 	}
@@ -487,6 +488,22 @@ public abstract class Ship {
 	}
 	
 	/**
+	 * aim the crew tile up
+	 */
+	public void chooseTeleporteTileUp() {
+		this.crewTile.unmarkTarget();
+		this.crewTile = aimUp(this.layout, this.getTileFromMember(this.selectedMember));
+	}
+	
+	/**
+	 * aim the crew tile down
+	 */
+	public void chooseTeleporteTileDown() {
+		this.crewTile.unmarkTarget();
+		this.crewTile = aimDown(this.layout, this.getTileFromMember(this.selectedMember));
+	}
+	
+	/**
 	 * Aims the guns up.
 	 * @param opponent the ship to aim at
 	 */
@@ -673,7 +690,8 @@ public abstract class Ship {
 	 */
 	private Porte getPorteFromTile(Tile tile1, Tile tile2) {
 		for(Porte p : this.portes) {
-			if((tile1 == p.getTile1() && tile2 == p.getTile2()) || (tile1 == p.getTile2() && tile1 == p.getTile2())) {
+			
+			if((tile1 == p.getTile1() && tile2 == p.getTile2()) || (tile1 == p.getTile2() && tile2 == p.getTile1())) {
 				return p;
 			}
 		}

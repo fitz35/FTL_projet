@@ -65,7 +65,7 @@ public class IAv1 extends IA {
 				i = Start.getRandomInt(0, iAlea.size() - 1);
 			}
 		}
-		this.opponent.target = this.player.getFirstTile();
+		this.opponent.target = ((ArrayList<Tile>)this.player.layout).get(Start.getRandomInt(0, this.player.layout.size() - 1));
 		for(int i = 0 ; i < this.opponent.getNbWeapon() ; i++)//tire avec tous les weapon
 			this.opponent.shotWeapon(i);
 	}

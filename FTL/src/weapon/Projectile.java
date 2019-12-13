@@ -113,6 +113,7 @@ public abstract class Projectile {
 	 * @param tile the Module to apply
 	 */
 	public void applyEffect(Module tile) {
+		tile.appliqueDmg(this.damage);
 		return;
 	}
 }

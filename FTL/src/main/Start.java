@@ -6,7 +6,7 @@ import display.StdDraw;
 import display.Vector2;
 import map.CombatWorld;
 import map.Sector;
-import ship.DummyShip;
+import ship.TriFighter;
 import weapon.Death;
 import weapon.DummyGun;
 import weapon.Ion;
@@ -45,11 +45,11 @@ public class Start {
 		StdDraw.enableDoubleBuffering();
 		
 		//player
-		Player p = new Player(new DummyShip(true, new Vector2<Double>(0.3, 0.5)));
+		Player p = new Player(new TriFighter(true, new Vector2<Double>(0.3, 0.5)));
 		// Creates the world
 		CombatWorld w = new CombatWorld(p.getShip());
 		//map
-		Map m = new Map(p);
+		Map m = new Map(p, w);
 		
 		// Game infinite loop -> j'usqu'a ce que le joueur meure
 		while(!w.isPlayerDead()) {

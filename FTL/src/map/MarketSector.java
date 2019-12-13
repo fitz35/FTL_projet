@@ -12,7 +12,6 @@ import main.Player;
 import main.Start;
 import ship.CrewMember;
 import ship.Ship;
-import weapon.DummyGun;
 import weapon.Ion;
 import weapon.Weapon;
 

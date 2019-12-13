@@ -268,13 +268,11 @@ public class Tile {
 		Tile retour = t;
 		
 		for(Tile tile : tiles) {
-			if(tile != t && tile.getCenterPosition().getX() > t.getCenterPosition().getX()) {
+			if(tile != t && tile.getCenterPosition().getX() > t.getCenterPosition().getX() && 
+					(double) tile.getCenterPosition().getY() == (double) t.getCenterPosition().getY()) {
 				if(t != retour) {
-					if(getHorizontalDistanceTile(t, tile) < getHorizontalDistanceTile(t, retour) || (
-							getHorizontalDistanceTile(t, tile) == getHorizontalDistanceTile(t, retour) &&
-							getVerticalDistanceTile(t, tile) < getVerticalDistanceTile(t, retour))) {
-							retour = tile;
-						
+					if(getHorizontalDistanceTile(t, tile) < getHorizontalDistanceTile(t, retour)) {
+						retour = tile;
 					}
 				}else {
 					retour = tile;
@@ -295,13 +293,11 @@ public class Tile {
 		Tile retour = t;
 		
 		for(Tile tile : tiles) {
-			if(tile != t && tile.getCenterPosition().getX() < t.getCenterPosition().getX()) {
+			if(tile != t && tile.getCenterPosition().getX() < t.getCenterPosition().getX() && 
+					(double) tile.getCenterPosition().getY() == (double) t.getCenterPosition().getY()) {
 				if(t != retour) {
-					if(getHorizontalDistanceTile(t, tile) < getHorizontalDistanceTile(t, retour) || (
-							getHorizontalDistanceTile(t, tile) == getHorizontalDistanceTile(t, retour) &&
-							getVerticalDistanceTile(t, tile) < getVerticalDistanceTile(t, retour))) {
-							retour = tile;
-						
+					if(getHorizontalDistanceTile(t, tile) < getHorizontalDistanceTile(t, retour)) {
+						retour = tile;
 					}
 				}else {
 					retour = tile;
@@ -322,13 +318,12 @@ public class Tile {
 		Tile retour = t;
 		
 		for(Tile tile : tiles) {
-			if(tile != t && tile.getCenterPosition().getY() > t.getCenterPosition().getY()) {
+			if(tile != t && tile.getCenterPosition().getY() > t.getCenterPosition().getY() && 
+					(double) tile.getCenterPosition().getX() == (double) t.getCenterPosition().getX()) {
+				
 				if(t != retour) {
-					if(getVerticalDistanceTile(t, tile) < getVerticalDistanceTile(t, retour) || (
-							getVerticalDistanceTile(t, tile) == getVerticalDistanceTile(t, retour) && 
-							getHorizontalDistanceTile(t, tile) < getHorizontalDistanceTile(t, retour))) {
-							retour = tile;
-						
+					if(getVerticalDistanceTile(t, tile) < getVerticalDistanceTile(t, retour)) {
+						retour = tile;
 					}
 				}else {
 					retour = tile;
@@ -349,12 +344,11 @@ public class Tile {
 		Tile retour = t;
 		
 		for(Tile tile : tiles) {
-			if(tile != t && tile.getCenterPosition().getY() < t.getCenterPosition().getY()) {
+			if(tile != t && tile.getCenterPosition().getY() < t.getCenterPosition().getY() && 
+					(double) tile.getCenterPosition().getX() == (double) t.getCenterPosition().getX()) {
 				if(t != retour) {
-					if(getVerticalDistanceTile(t, tile) < getVerticalDistanceTile(t, retour) || (
-							getVerticalDistanceTile(t, tile) == getVerticalDistanceTile(t, retour) && 
-							getHorizontalDistanceTile(t, tile) < getHorizontalDistanceTile(t, retour))) {
-							retour = tile;
+					if(getVerticalDistanceTile(t, tile) < getVerticalDistanceTile(t, retour)) {
+						retour = tile;
 						
 					}
 				}else {

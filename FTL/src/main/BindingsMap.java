@@ -5,20 +5,27 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import display.StdDraw;
-import main.BindingsCombatWorld.CodeCheat;
+import map.CombatWorld;
 
 public class BindingsMap {
 	private Map w;		// The map on which the actions act
+	private CombatWorld cbtW; //the world of the combat
 	private Collection<CodeCheat> cheatCode; //the cheatCode
 	 
 	/**
 	 * Create the bindings
 	 * @param w the world
 	 */
-	public BindingsMap(Map w) {
+	public BindingsMap(Map w, CombatWorld cbtWorld) {
 		this.w=w;
+		this.cbtW = cbtWorld;
 		
 		this.cheatCode = new ArrayList<CodeCheat> ();
+		int[] sequence1 = {KeyEvent.VK_M, KeyEvent.VK_M, KeyEvent.VK_M};
+		this.cheatCode.add(new CodeEarnInfinitMoney(sequence1));
+		
+		int[] sequence2 = {KeyEvent.VK_A, KeyEvent.VK_L, KeyEvent.VK_V};
+		this.cheatCode.add(new CodeLevelUpEnemy(sequence2));
 	}
 	
 	/**
@@ -52,5 +59,40 @@ public class BindingsMap {
 		else if(key.getKeyCode() == KeyEvent.VK_RIGHT)
 			this.w.deplacePlayerHorizontale(true);
 	}
+	
+	///////////////////////////////////////////////////////////
+	//code cheat
+	
+	private class CodeEarnInfinitMoney extends CodeCheat{
+
+		protected CodeEarnInfinitMoney(int[] sequence) {
+			super(sequence);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		protected void toDo() {
+			// TODO Auto-generated method stub
+			w.getPlayer().addCoins(5000);
+		}
+		
+	}
+	
+	
+	private class CodeLevelUpEnemy extends CodeCheat{
+
+		protected CodeLevelUpEnemy(int[] sequence) {
+			super(sequence);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		protected void toDo() {
+			// TODO Auto-generated method stub
+			cbtW.addLevel(5);
+		}
+		
+	}
+	
 
 }
