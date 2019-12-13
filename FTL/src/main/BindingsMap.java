@@ -12,6 +12,7 @@ public class BindingsMap {
 	private CombatWorld cbtW; //the world of the combat
 	private Collection<CodeCheat> cheatCode; //the cheatCode
 	 
+	
 	/**
 	 * Create the bindings
 	 * @param w the world
